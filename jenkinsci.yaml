@@ -1,0 +1,387 @@
+########################################################################################################################
+### document-version parametresi bu dokümanın versiyonunu temsil etmektedir.                                         ###
+### Değiştirilmemelidir.                                                                                             ###
+########################################################################################################################
+document-version: 2.4
+
+########################################################################################################################
+### will-be-deployed parametresi projenin build sonrasında test ortama deploy edilip edilmeyeceğini belirlemektedir. ###
+### Test ortamlara deploy etmek istenildiğinde true olarak set edilmelidir. Default değeri false set edilmiştir.     ###
+########################################################################################################################
+will-be-deployed: false
+
+  ########################################################################################################################
+  ### server-type parametresi projenin deploy edileceği uygulama sunucusu tipini temsil etmektedir.                    ###
+  ### Test ortamlara deploy etmek istenildiğinde set edilmesi zorunludur.                                              ###
+  ### Alabileceği değerler: weblogic, iis, awseb, tkstore, apache, esb, openshift, azure,  winservice                  ###
+  ### bkz. 'will-be-deployed' parametresi                                                                              ###
+  ########################################################################################################################
+  #server-type: openshift
+
+  ########################################################################################################################
+  ###    Bu blok tüm platformlar için deploy ve/veya test otomasyon süreçleri için ortak alandır.                   ###
+  ### Weblogic, IIS, TKStore, AWS Elasticbeanstalk, ortamlarına deployment ve/veya test koşumu yapılacağı              ###
+  ### zaman doldurulmalıdır.                                                                    ###
+  ### deploy-test-sequence bloğu yukardan aşağıya doğru belirtilen sırayla deploy ve/veya test süreçlerini          ###
+  ### belirtilen konfigürasyonlar ile çalıştırmaktadır.                                                ###
+  ### dev-deploy-test-sequence bloğu develop branch üzerinden oluşan paketin hangi ortamlara atılacağı ve sonrasında   ###
+  ### eğer varsa test otomasyon bilgisini içermektedir. (develop pipeline)                                            ###
+  ### release-deploy-test-sequence bloğu release branch üzerinden oluşan paketin hangi ortamlara atılacağı             ###
+  ###    ve sonrasında eğer varsa test otomasyon bilgisini içermektedir. (release pipeline)                         ###
+  ### 'wait-result' parametresi test otomasyon job'unun sonucunun beklenmesini ifade eder.                      ###
+  ### Weblogic için; ortamların detaylarının girileceği kısım weblogic-config alanıdır.                        ###
+  ### ISS için; ortamların detaylarının girileceği kısım iis-config alanıdır.                                   ###
+  ### AWSEB için; ortamların detaylarının girileceği kısım awseb-config alanıdır.                                ###
+  ### TKStore için; ortamların detaylarının girileceği kısım tkstore-config alanıdır.                             ###
+  ### Openshift için; ortamların detaylarının girileceği kısım openshift-config alanıdır.                           ###
+  ###    Birden fazla deploy ve/veya test ortam bilgisi ayrı ayrı parametrelere set edilebilir.                    ###
+  ### 'deploy' ve 'test' key'leri sabittir ve değiştirilmemelidir.                                        ###
+  ### 'continue-on-fail' opsiyonel bir parametredir. 'deploy' ve/veya 'test' adımları içerisinde 'true' olarak set     ###
+  ### edildiğinde sonuç 'FAILURE' olması durumunda süreci sollandırır. Bir sonraki parametreye geçmez.             ###
+  ########################################################################################################################
+  #dev-deploy-test-sequence:
+  #  - deploy: cure-dev
+  #  - test: #smoke-test-job
+  #    wait-result: true
+  #  - deploy: #weblogic-kurumsaldev01
+  #  - test: #regression-test-job
+  #    wait-result: false
+
+#release-deploy-test-sequence:
+# - deploy: cure-test
+# - deploy: cure-uat
+#   continue-on-fail: false
+#  - test: #regression-test-job
+#    wait-result: false
+#    continue-on-fail: true
+
+########################################################################################################################
+### Sadece Android ve iOS projeler için set edilmesi zorunludur.                                                     ###
+### app-name parametresi build sırasında artifactlerin isimlendirilmesi için kullanılmaktadır.                     ###
+### Örn. smartmobile, upmobile, vs.                                                                                  ###
+########################################################################################################################
+app-name: in-memory-spec-store
+
+########################################################################################################################
+### Bu blok sadece Android uygulamalar için doldurulmalıdır.                                                           ###
+### Android uygulamalarının hangi targetlar üzerinden paket oluşturalacağı bilgisini temsil etmektedir.              ###
+### Android build alınması için android-properties mutlaka doldurulmalıdır.                                          ###
+########################################################################################################################
+gradle-properties:
+  - target: dev
+    target-name: bootJar
+    unit-test: true
+  - target: dev
+    target-name: publish
+  - target: preprod
+    target-name: publish
+#  - target: #pilot
+#    target-name: #assemblePilotRelease
+  - target: prod
+    target-name: publish
+
+########################################################################################################################
+### Bu blok sadece IOS uygulamalar için doldurulmalıdır.                                                               ###
+### IOS uygulamalarının hangi target üzerinden paket oluşturulacağı bilgisini temsil etmektedir.                     ###
+### IOS build alınması için ios-properties alanı mutlaka doldurulmalıdır.                                           ###
+### workspace parametresi IOS uygulamalarının build path bilgisini içermektedir.                                     ###
+########################################################################################################################
+#workspace: #THY.xcworkspace
+#language: #swift or #objc
+#ios-properties:
+#  - target: #dev
+#    target-name: #ThyDev
+#    unit-test: #true
+#  - target: #test
+#    target-name: #ThyTest
+#  - target: #preprod
+#    target-name: #ThyUat
+#  - target: #pilot
+#    target-name: #ThyPilot
+#  - target: #prod
+#    target-name: #ThyProd
+
+########################################################################################################################
+### Bu blok sadece ESB uygulamalar için doldurulmalıdır.                                                              ###
+### ESB uygulamalarının hangi ortam üzerinden paket oluşturulup deploy edileceği bilgisini temsil etmektedir.        ###
+### ESB build ve deploy işlemleri için esb-config mutlaka doldurulmalıdır.                                           ###
+########################################################################################################################
+#esb-config:
+#  - esb-dev01: DEVB2B
+#  - esb-dev02: DEVEAI
+#  - esb-uat01: UATB2B
+#  - esb-uat02: UATEAI
+#  - esb-test01: TESTB2B
+#  - esb-test02: TESTEAI
+#  - esb-pilot01: PILOTB2B
+#  - esb-pilot02: PILOTEAI
+
+########################################################################################################################
+### Bu blok projenin deploy edileceği Weblogic ortamlarının detayını içermektedir.                                   ###
+### application-name parametresi uygulamanın weblogic'te karışılık gelen ismini temsil etmektedir.                   ###
+### deploy_cluster parametresi Weblogic'te deploy edilecek cluster ismini temsil etmektedir.                         ###
+### admin_url parametresi Weblogic sunucusunun t3 url'ini temsil etmektedir.                                         ###
+### artifact-name parametresi oluşan paketlerden hangisinin deploy edileceği bilgisini temsil etmektedir.            ###
+### artifact-type parametresi weblogic'e deploy edilecek paketin uzantısını temsil etmektedir.                       ###
+### deploy-server parametresi weblogic'te deploy edilecek server ismini temsil etmektedir.                           ###
+########################################################################################################################
+#weblogic-config:
+#  weblogic-dev01:
+#    application-name: #documentws
+#    deploy_cluster: #decompositionDevCluster
+#    admin_url: #t3://192.168.244.169:12100
+#    artifact-name: #appname
+#    artifact-type: #war
+#    deploy-server: #decomposition_dev
+#    force-stop-prev-package: #true
+
+#  weblogic-kurumsaldev01:
+#    application-name: #documentws
+#    deploy_cluster: #kurumsaldev01cluster
+#    admin_url: #t3://192.168.244.169:12100
+#    artifact-name: #appname
+#    artifact-type: #ear
+#    deploy-server: #decomposition_dev
+#    force-stop-prev-package: #true
+
+########################################################################################################################
+### Bu blok projenin deploy edileceği IIS ortamlarının detayını içermektedir.                                        ###
+### publishprofilepath parametresi dotnet projeler için hangi sunucuya hangi konfigürasyonlarla atılacağı            ###
+### bilgisinin bulunduğu publish profile dosyasının proje içerisindeki yerini temsil etmektedir.                     ###
+### Örn: ./proje/src/publishAsya.pubxml                                                                              ###
+########################################################################################################################
+#iis-config:
+#  packageVersion: 1.0.0.0
+#  configurationReleaseExists: true
+#  force-minify: false
+#  iis-asyaServer:
+#    publishprofilepath: null
+#  iis-avrasyaServer:
+#    publishprofilepath: null
+#  ansible-test:
+#    ansible:
+#      hosts:
+#        SERVERHOSTNAME.THYNET.THY.COM:
+#      vars:
+#        site_name: "demo"
+#        exception_list:
+#          - 'web.config'
+#        zip_file_name: "Demo.zip"
+#        physical_path: 'D:/applications/api/demo'
+#        application_name: 'demo'
+#        application_pool_name: "demo"
+#        url: 'http://info.thy.com/demo'
+#  ansible-test2subdirectory:
+#    ansible:
+#      hosts:
+#        SERVERHOSTNAME.THYNET.THY.COM:
+#      vars:
+#        site_name: "demo"
+#        exception_list:
+#          - 'web.config'
+#        zip_file_name: "Demo.zip"
+#        physical_path: 'D:/applications/api/demo'
+#        application_name: 'demo'
+#        application_pool_name: "demo"
+#        sub_directory: "demo-api"
+#        url: 'http://info.thy.com/demo'
+
+########################################################################################################################
+### Bu blok projenin deploy edileceği TKStore ortamlarının detayını içermektedir.                                    ###
+### 'app-id' parametresi paketin deploy edileceği tk-store'da tanımlı uygulamanın id'sini temsil etmektedir.         ###
+### 'policy-id' parametresi, TKStore'a deploy edilecek uygulamanın ait olacağı policy id'dir                   ###
+### 'target' parametresi, hangi target paketinin TKStore'a deploy edileceğini temsil etmektedir.                ###
+########################################################################################################################
+#tkstore-config:
+#  tkstore-app-dev:
+#    app-id: 1712
+#    policy-id: 141
+#    target: dev
+#    device-type: ALL
+#  tkstore-app-test:
+#    app-id: 1713
+#    policy-id: 441
+#    target: test
+#    device-type: ALL
+#  tkstore-app-preprod:
+#    app-id: 1714
+#    policy-id: 441
+#    target: preprod
+#    device-type: ALL
+#  tkstore-app-pilot:
+#    app-id: 1715
+#    policy-id: 441
+#    target: pilot
+#    device-type: ALL
+#  tkstore-app-prod:
+#    app-id: 1716
+#    policy-id: 441
+#    target: prod
+#    device-type: ALL
+
+########################################################################################################################
+### Bu blok uygulamanın deploy edileceği Elasticbeanstalk ve S3 servislerinin detaylarını içermektedir.                ###
+### "profile" hangi profilin deploy edeceği bilgisini ifade eder. Örnek: jenkins                              ###
+### "region" bilgisi Amazon'un hangi bölgesinden servisin çalıştırılacağını ifade eder.                         ###
+### "artifact-path" deploy edilecek paketin bulunduğu dizindir. Uygulamanın workspace'inin başı baz alınır.            ###
+### "artifact-name" deploy edilecek paketin adıdır.                                                    ###
+### "s3address" paketin upload edileceği adres bilgisini ifade eder.                                       ###
+### "application-name" Amazon'un ElasticBeanstalk servisindeki uygulama adını ifade eder.                       ###
+### "s3key" ve "s3bucket" parametresi Amazon'un S3 servisinden alınıp Elasticbeanstalk'a deploy edilebilmesi         ###
+### için gereken bilgilerdir.                                                                    ###
+### "environment-name" Amazon'un ElasticBeanstalk servisindeki ortam adını ifade eder.                       ###
+########################################################################################################################
+#awseb-config:
+#  awseb-tk-jetmobile-dev
+#    profile: #jenkins
+#    region: #eu-west-1
+#    artifact-name: #framework
+#    artifact-type: #war
+#    s3address: #s3://mobiledev-cdn/jenkins-deploy-packages/
+#    application-name: #AnadoluJet-Proxy
+#    s3bucket: #mobiledev-cdn
+#    s3key: #jenkins-deploy-packages/
+#   environment-name: tk-jetmobile-dev
+#  awseb-tk-jetmobile-test
+#    profile: #jenkins
+#    region: #eu-west-1
+#    artifact-name: #framework
+#    artifact-type: #war
+#    s3address: #s3://mobiledev-cdn/jenkins-deploy-packages/
+#    application-name: #AnadoluJet-Proxy
+#    s3bucket: #mobiledev-cdn
+#    s3key: #jenkins-deploy-packages/
+#   environment-name: tk-jetmobile-test
+
+
+########################################################################################################################
+### Bu blok Openshift ile projelerin docker image üretilmesi detayını içermektedir.                                    ###
+### base-image parametresi uygulamanın hangi base image ile ayağa kaldırılacağını temsil eder.                         ###
+### Base image bilinmiyor ise ALMSUPPORT'dan destek alınabilir.                                                        ###
+### artifact-name parametresi oluşan paketlerden hangisinin image edileceği bilgisini temsil etmektedir.               ###
+### artifact-type parametresi openshift'e deploy edilecek paketin uzantısını temsil etmektedir.                        ###
+########################################################################################################################
+#openshift-image:
+#    application-name: cr-flight-ms-app
+#    artifact-name: cr-flight-ms
+#    artifact-type: jar
+#    base-image: ubi8-openjdk-21:1.21-2.1749483225
+
+
+########################################################################################################################
+### Bu blok projenin deploy edileceği Openshift ortamlarının detayını içermektedir.                                    ###
+### application-name parametresi uygulamanın openshift'te karışılık gelen ismini temsil etmektedir.                    ###
+### project-prefix parametresi Openshift'te deploy edilecek proje prefix'ini temsil etmektedir.                        ###
+### service-port parametresi uygulamanın ayağa kalkacağı portu temsil etmektedir.                                      ###
+### config-mount-path parametresi resources ve application.properties dosyalarının imajda nerede tutulacağını belirtir.###
+### config-file-path parametresi resources ve application.properties dosyalarının projede nerede tutulduğunu belirtir. ###
+### weight parametresi trafik yönlendirme ağırlığını temsil eder. Test ortam için ayrım yoktur. Opsiyoneldir.          ###
+### environment parametresi ilgili ortamda hangi projeye, hangi resource'lar ile gidileceğini temsil eder.             ###
+### healthcheck-endpoint parametresi uygulama destekliyor ise readiness ve liveness kontrollerini temsil eder.         ###
+### Opsiyoneldir.                                                                                                      ###
+### management-service-port parametresi varsa management agent portunu temsil eder. Opsiyoneldir.                      ###
+###                                                                                                                    ###
+##########################################################################################################################
+#openshift-config:
+#  cure-dev:
+#    application-name: cr-flight-ms-app
+#    project-prefix: cure
+#    service-port: 8080
+#    management-service-port: 8081
+#    healthcheck-endpoint: /actuator/health
+#    environment: ocp-nonprod
+#    global-helm-config:
+#      bitbucketConfURL: https://bitbucket.thy.com/scm/usds/cr-flight-ms-helm-values.git
+#  cure-test:
+#    application-name: cr-flight-ms-app
+#    project-prefix: cure
+#    service-port: 8080
+#    management-service-port: 8081
+#    healthcheck-endpoint: /actuator/health
+#    environment: ocp-nonprod
+#    global-helm-config:
+#      bitbucketConfURL: https://bitbucket.thy.com/scm/usds/cr-flight-ms-helm-values.git
+#  cure-uat:
+#    application-name: cr-flight-ms-app
+#    project-prefix: cure
+#    service-port: 8080
+#    management-service-port: 8081
+#    healthcheck-endpoint: /actuator/health
+#    environment: ocp-nonprod
+#    global-helm-config:
+#      bitbucketConfURL: https://bitbucket.thy.com/scm/usds/cr-flight-ms-helm-values.git
+
+########################################################################################################################
+### Bu blok projenin deploy edileceği Azure ortamlarının detayını içermektedir.                                        ###
+### application-name parametresi uygulamanın openshift'te karışılık gelen ismini temsil etmektedir.                    ###
+### host: Azure host bilgisi örneğin thy.azure.io:443 zorunludur.                                                      ###
+### secret-id: jenkinsci de tanımlı credentials id bilgisidir. Devops ekibinden alınmalıdır.                           ###
+###                                                                                                                    ###
+##########################################################################################################################
+#azure-config:
+#  azure-dev:
+#    host: azure_host
+#    secret-id: coffee_azure
+#    application-name: pnl
+
+#uncovered-platforms:
+#  package-version: 1.0.0.0
+
+#file-copy-config:
+#  asya-server:
+#    file-server-path:
+#    subfolder-name:
+#    source-file-path:
+
+
+########################################################################################################################
+### Bu blok projenin deploy edildikten sonra eğer varsa test otomasyon joblarının detaylarını içerir.                ###
+### remoteJenkinsUrl parametresi test jobunun bulunduğu Jenkins adresini temsil etmektedir.                          ###
+### token parametresi varsa job'a erişmek için gerekli token bilgisini temsil etmektedir.                            ###
+########################################################################################################################
+#automated-tests:
+#  smoke-test-job:
+#    jobUrl: https://jenkins.thy.com/testjob1
+#    token: 1214325
+#  regression-test-job:
+#    jobUrl: https://jenkins.thy.com/testjob2
+#    token: 2353466
+########################################################################################################################
+
+########################################################################################################################
+### Bu blok Maven projelerde snapshot versiyon kontrolü yapmaktadır. Eğer false veya aktif edilmemişse, versiyon     ###
+### bilgisi olağan düzende devam eder. Eğer true olarak set edilirse, pomVersion'da SNAPSHOT bilgisi kontrol edilir. ###
+### Eğer SNAPSHOT değeri varsa, X.X.X-SNAPSHOT şeklinde build alınır.                                                ###
+########################################################################################################################
+#maven-build-config:
+#  use-snapshot: true
+########################################################################################################################
+
+########################################################################################################################
+### Bu blok React Native Windows Tablet kısmı için geçerlidir.                                                       ###
+########################################################################################################################
+#app-name: DevOps
+#windows-tablet:
+#  packageVersion: 1.0.0.0
+########################################################################################################################
+
+
+########################################################################################################################
+### Bu blok Windows Service Deployment için geçerlidir.                                                              ###
+########################################################################################################################
+#winservice-config:
+#  ansible-service01:
+#    ansible:
+#      hosts:
+#        ServerHostName.THYNET.THY.COM:
+#      vars:
+#        exception_list:
+#          - "web.config"
+#          - "db.config"
+#        zip_file_name: "zipname.zip"
+#        sub_directory: "FolderNameOr(Boş ise satırı silin)"
+#        physical_path: 'C:\deployPath'
+#        application_name: 'AppName'
+#        application_service_name: "ServiceName"
+
+########################################################################################################################

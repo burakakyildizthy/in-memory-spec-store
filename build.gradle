@@ -1,0 +1,677 @@
+plugins {
+    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'jacoco'
+	id 'org.springframework.boot' version '3.5.12'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+ext {
+    springCloudVersion = '2025.0.0'
+}
+
+// Force TLS 1.2+ for Maven Central and Nexus (Jenkins compatibility)
+System.setProperty('https.protocols', 'TLSv1.2,TLSv1.3')
+System.setProperty('jdk.tls.client.protocols', 'TLSv1.2,TLSv1.3')
+
+group = 'com.thy.fss.common'
+version = '4.0.0.37'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+
+repositories {
+    mavenCentral()
+    maven {
+        url = 'https://nexus.thy.com/repository/udc-gradle-prod/'
+        name = 'nexus-thy-udc-gradle-prod'
+        credentials {
+            username = project.findProperty('nexus_user') ?: System.getenv('NEXUS_USER')
+            password = project.findProperty('nexus_password') ?: System.getenv('NEXUS_PASSWORD')
+        }
+    }
+    maven {
+        url = 'https://nexus.thy.com/repository/udc-gradle-preprod/'
+        name = 'nexus-thy-udc-gradle-preprod'
+        credentials {
+            username = project.findProperty('nexus_user') ?: System.getenv('NEXUS_USER')
+            password = project.findProperty('nexus_password') ?: System.getenv('NEXUS_PASSWORD')
+        }
+    }
+    maven {
+        url = 'https://nexus.thy.com/repository/udc-gradle-staging/'
+        name = 'nexus-thy-udc-gradle-staging'
+        credentials {
+            username = project.findProperty('nexus_user') ?: System.getenv('NEXUS_USER')
+            password = project.findProperty('nexus_password') ?: System.getenv('NEXUS_PASSWORD')
+        }
+    }
+    maven {
+        url = 'https://nexus.thy.com/repository/udc-gradle-dev/'
+        name = 'nexus-thy-udc-gradle-dev'
+        credentials {
+            username = project.findProperty('nexus_user') ?: System.getenv('NEXUS_USER')
+            password = project.findProperty('nexus_password') ?: System.getenv('NEXUS_PASSWORD')
+        }
+    }
+}
+
+dependencies {
+    // Core dependencies - Spring Boot 3.x / Spring 6.x uyumlu
+    api 'org.springframework.data:spring-data-commons'
+    compileOnly 'org.springframework:spring-context'
+
+    // Spring Boot autoconfigure support for filter parameter binding
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
+    compileOnly 'org.springframework:spring-webmvc'
+
+    // Data source support
+    implementation 'org.springframework:spring-jdbc'
+    implementation 'com.zaxxer:HikariCP:5.1.0'
+    implementation 'org.springframework:spring-web'
+
+    // Jackson dependencies - use BOM for version alignment
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.17.2')
+    implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // Annotation processor for test classes only (main classes don't need generated code)
+    testAnnotationProcessor files(sourceSets.main.output.classesDirs) { builtBy compileJava }
+    testAnnotationProcessor sourceSets.main.runtimeClasspath
+
+    // Testing - align all JUnit versions
+    testImplementation platform('org.junit:junit-bom:5.10.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.platform:junit-platform-suite'
+    testImplementation 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito for Java 21 compatibility - inline mocking is built into mockito-core 5.x
+    testImplementation 'org.mockito:mockito-core:5.8.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.8.0'
+    testImplementation 'net.bytebuddy:byte-buddy:1.14.10'  // Explicit ByteBuddy version
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.14.10'  // ByteBuddy agent
+
+    testImplementation 'org.assertj:assertj-core:3.27.7'
+
+    // Property-based testing with jqwik
+    testImplementation 'net.jqwik:jqwik:1.9.2'
+
+    // Spring context and validation for DataBinder tests
+    testImplementation 'org.springframework:spring-context'
+    testImplementation 'org.springframework:spring-beans'
+
+    // Integration testing - güvenlik açıkları düzeltildi
+    testImplementation platform('org.testcontainers:testcontainers-bom:1.20.4')
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.apache.commons:commons-compress:1.26.0'
+    testImplementation 'org.testcontainers:postgresql'
+
+    // WireMock - standalone tüm bağımlılıkları içerir (Jetty dahil)
+    testImplementation('org.wiremock:wiremock-standalone:3.10.0') {
+        exclude group: 'org.eclipse.jetty'  // Standalone kendi Jetty'sini içerir
+    }
+
+    testImplementation 'org.postgresql:postgresql:42.7.7'  // Güvenlik açığı düzeltildi
+    testImplementation 'com.h2database:h2:2.2.224'
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+
+// Configure JAR creation for library usage
+jar {
+    enabled = true
+    archiveClassifier = '' // Remove classifier to make this the main jar
+
+    manifest {
+        attributes(
+                'Implementation-Title': 'In Memory Spec Store',
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'THY FSS',
+                'Created-By': "Gradle ${gradle.gradleVersion}",
+                'Build-Jdk': "${System.getProperty('java.version')} (${System.getProperty('java.vendor')} ${System.getProperty('java.vm.version')})"
+        )
+    }
+}
+
+// Disable Spring Boot fat JAR since this is a library
+tasks.named('bootJar') {
+    enabled = false
+}
+
+// Apply publishing configuration from publish.gradle (Jenkins requirement)
+apply from: rootProject.file('publish.gradle')
+
+tasks.named('bootBuildImage') {
+    builder = 'paketobuildpacks/builder-jammy-base:latest'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+def jacocoExcludes = [
+        '**/model/dto/**',
+        '**/Application.class',
+        '**/model/properties/**',
+        '**/test/**'
+]
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.required = true
+        xml.required = true
+        csv.required = false
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+}
+
+jacocoTestCoverageVerification {
+    dependsOn jacocoTestReport
+    violationRules {
+        rule {
+            element = 'BUNDLE'
+            includes = ['com.thy.fss.common.inmemory.*']
+            excludes = jacocoExcludes
+
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.70
+            }
+        }
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: jacocoExcludes)
+        }))
+    }
+}
+
+// Test configuration with Java 21 and Mockito compatibility
+test {
+    useJUnitPlatform {
+        excludeTags 'benchmark', 'performance'
+    }
+
+    // Exclude benchmark and performance test classes
+    // Explicitly exclude benchmark/performance tests
+    exclude '**/*Benchmark*.class'
+    exclude '**/*Performance*.class'
+    exclude '**/*Perf*.class'
+    exclude '**/*Memory*.class'
+    exclude '**/benchmark/**'
+    exclude '**/performance/**'
+
+    // JVM arguments for Java 21 and Mockito compatibility
+    jvmArgs = [
+            '-Xmx4g',
+            '-XX:+UseG1GC',
+            '-XX:MaxGCPauseMillis=100',
+
+            // Java 21 module access for Mockito inline mocks
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.text=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED',
+            '--add-opens=java.base/java.net=ALL-UNNAMED',
+            '--add-opens=java.base/java.nio=ALL-UNNAMED',
+            '--add-opens=java.base/java.time=ALL-UNNAMED',
+            '--add-opens=java.base/sun.nio.ch=ALL-UNNAMED',
+            '--add-opens=java.base/sun.security.util=ALL-UNNAMED',
+            '--add-opens=java.desktop/java.awt.font=ALL-UNNAMED',
+
+            // Mockito inline mock configuration
+            '-Dmockito.mock.maker=inline',
+            '-Dnet.bytebuddy.experimental=true',
+
+            // JUnit configuration
+            '-Djunit.jupiter.execution.parallel.enabled=false',  // Disable parallel for stability
+            '-Djunit.jupiter.execution.parallel.mode.default=same_thread',
+            '-Djunit.jupiter.execution.parallel.config.strategy=fixed',
+            '-Djunit.jupiter.execution.parallel.config.fixed.parallelism=1'
+    ]
+
+    // Test execution timeout
+    timeout = Duration.ofMinutes(10)
+
+    // Single threaded execution for stability
+    maxParallelForks = 1
+
+    // Improved test logging
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = false
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true  // Show stack traces for Mockito errors
+        exceptionFormat = "full"  // Full exception format for debugging
+
+        // Show slow tests
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                println "\nTest Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                println "Test execution time: ${(result.endTime - result.startTime) / 1000}s"
+            }
+        }
+    }
+
+    finalizedBy jacocoTestReport
+}
+tasks.register('integrationTest', Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    include '**/*IT.class', '**/*IntegrationTest.class', '**/*AdvancedTest.class'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test
+
+    // Apply same JVM arguments as main test task
+    jvmArgs = [
+            '-Xmx4g',
+            '-XX:+UseG1GC',
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '-Dmockito.mock.maker=inline',
+            '-Dnet.bytebuddy.experimental=true'
+    ]
+
+    maxParallelForks = 1
+}
+
+
+// Convenience tasks
+tasks.register('testAll') {
+    dependsOn test, integrationTest
+    description = 'Runs all tests'
+}
+
+tasks.register('benchmarkTest', Test) {
+    useJUnitPlatform {
+        includeTags 'benchmark'
+    }
+    include '**/*Benchmark*'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test
+
+    // JVM arguments for benchmarks with Mockito support
+    jvmArgs = [
+            '-Xmx4g',
+            '-XX:+UseG1GC',
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '-Dmockito.mock.maker=inline',
+            '-Dnet.bytebuddy.experimental=true'
+    ]
+    description = 'Runs benchmark tests'
+    maxParallelForks = 1
+}
+
+tasks.register('performanceTest', Test) {
+    useJUnitPlatform {
+        includeTags 'performance'
+    }
+    include '**/*Performance*', '**/*Perf*'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test
+
+    // JVM arguments for performance tests with Mockito support
+    jvmArgs = [
+            '-Xmx4g',
+            '-XX:+UseG1GC',
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '-Dmockito.mock.maker=inline',
+            '-Dnet.bytebuddy.experimental=true'
+    ]
+    description = 'Runs performance tests'
+    maxParallelForks = 1
+}
+
+tasks.register('realWorldE2ETest', Test) {
+    useJUnitPlatform {
+        includeTags 'integration'
+    }
+    include '**/RealWorldSynchronizationEndToEndTest.class'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+    shouldRunAfter test
+
+    // JVM arguments for long-running E2E test
+    jvmArgs = [
+            '-Xmx4g',
+            '-XX:+UseG1GC',
+            '-XX:MaxGCPauseMillis=100',
+            '--add-opens=java.base/java.lang=ALL-UNNAMED',
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens=java.base/java.util.concurrent=ALL-UNNAMED',
+            '--add-opens=java.base/java.time=ALL-UNNAMED',
+            '-Dmockito.mock.maker=inline',
+            '-Dnet.bytebuddy.experimental=true'
+    ]
+
+    // Extended timeout for 3-minute test
+    timeout = Duration.ofMinutes(5)
+
+    description = 'Runs real-world end-to-end synchronization test (3 minutes)'
+    maxParallelForks = 1
+
+    // Enhanced logging for E2E test
+    testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        showStandardStreams = true
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+        exceptionFormat = "full"
+
+        afterSuite { desc, result ->
+            if (!desc.parent) {
+                println "\n" + "=".repeat(80)
+                println "Real-World E2E Test Results"
+                println "=".repeat(80)
+                println "Status: ${result.resultType}"
+                println "Tests: ${result.testCount} (${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+                println "Duration: ${(result.endTime - result.startTime) / 1000}s"
+                println "=".repeat(80)
+            }
+        }
+    }
+}
+
+// Make sure coverage verification runs after test report generation
+jacocoTestCoverageVerification.dependsOn jacocoTestReport
+check.dependsOn jacocoTestCoverageVerification
+
+
+// Build optimization with enhanced annotation processor error visibility
+tasks.withType(JavaCompile).configureEach {
+    options.fork = true
+    options.forkOptions.jvmArgs += ['-Xmx1g']
+    options.encoding = 'UTF-8'
+
+    // Force annotation processor errors to be visible
+    options.compilerArgs += [
+            '-Xlint:processing',           // Show annotation processor warnings
+            '-proc:full',                  // Full annotation processing
+            '-Xmaxerrs', '1000',          // Show up to 100 errors (default is 100)
+            '-Xmaxwarns', '1000',         // Show up to 100 warnings
+            '-Xdiags:verbose'              // Verbose diagnostics for all errors
+    ]
+
+    // Always show annotation processor output
+    options.compilerArgs += [
+            '-Averbose=true',              // Verbose annotation processor output
+            '-Adebug=true'                 // Debug mode for annotation processors
+    ]
+
+    // Additional verbose mode for debugging
+    if (System.getProperty('inmemory.processor.debug') == 'true') {
+        options.compilerArgs += [
+                '-verbose',                // Verbose compiler output
+                '-XprintProcessorInfo',    // Print processor information
+                '-XprintRounds'            // Print annotation processing rounds
+        ]
+    }
+
+    // Capture and display annotation processor output
+    options.forkOptions.jvmArgs += [
+            '-Dinmemory.processor.debug=' + (System.getProperty('inmemory.processor.debug') ?: 'false')
+    ]
+
+    // Add helpful messages for both main and test compilation
+    doFirst {
+        def taskType = name.contains('Test') ? 'TEST' : 'MAIN'
+        println """
+================================================================================
+ANNOTATION PROCESSOR STATUS - ${taskType} COMPILATION
+================================================================================
+Compiling: ${name}
+Annotation Processing: ENABLED (verbose mode)
+Debug Mode: ${System.getProperty('inmemory.processor.debug') == 'true' ? 'ON' : 'OFF'}
+
+Generated files will be in:
+  build/generated/sources/annotationProcessor/java/${name.contains('Test') ? 'test' : 'main'}
+
+If you see errors about missing classes (ClassName_, ClassNameFilter)
+the annotation processor has failed.
+
+To enable full debug mode:
+  ./gradlew clean build -Dinmemory.processor.debug=true
+  
+To see generated files:
+  ./gradlew validateMetaModelGeneration
+  ./gradlew validateTestMetaModelGeneration (for test sources)
+================================================================================
+"""
+    }
+
+    // Show annotation processor completion status
+    doLast {
+        def taskType = name.contains('Test') ? 'TEST' : 'MAIN'
+        def generatedDir = file("${buildDir}/generated/sources/annotationProcessor/java/${name.contains('Test') ? 'test' : 'main'}")
+
+        if (generatedDir.exists()) {
+            def fileCount = 0
+            generatedDir.eachFileRecurse { file ->
+                if (file.name.endsWith('.java')) {
+                    fileCount++
+                }
+            }
+            println """
+================================================================================
+${taskType} ANNOTATION PROCESSOR COMPLETED
+================================================================================
+✓ Generated ${fileCount} files in ${generatedDir}
+================================================================================
+"""
+        } else {
+            println """
+================================================================================
+${taskType} ANNOTATION PROCESSOR WARNING
+================================================================================
+⚠️  No generated files found at ${generatedDir}
+This may indicate:
+  - No @MetaModel annotated classes in ${taskType.toLowerCase()} sources
+  - Annotation processor failed silently
+  - First build after clean
+================================================================================
+"""
+        }
+    }
+}
+
+// Add failure handler for compilation tasks
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+    if (task instanceof JavaCompile && state.failure) {
+        def taskType = task.name.contains('Test') ? 'TEST' : 'MAIN'
+        println """
+
+================================================================================
+${taskType} COMPILATION FAILED
+================================================================================
+
+If you see errors like:
+  - "cannot find symbol: class ClassName_"
+  - "cannot find symbol: class ClassNameFilter"
+  - "package ... does not exist"
+
+This means the annotation processor failed to generate metamodel classes.
+
+TROUBLESHOOTING:
+1. Run with debug mode:
+   ./gradlew clean build -Dinmemory.processor.debug=true
+   
+2. Check for errors in @MetaModel annotated classes
+
+3. Verify annotation processor configuration in build.gradle
+
+4. Check for circular dependencies between @MetaModel classes
+
+5. Ensure all field types are supported or are also @MetaModel classes
+
+6. Validate generated files:
+   ./gradlew validateMetaModelGeneration (for main sources)
+   ./gradlew validateTestMetaModelGeneration (for test sources)
+
+================================================================================
+"""
+    }
+}
+
+// Cleanup
+tasks.register('cleanGenerated', Delete) {
+    delete layout.buildDirectory.dir("generated")
+}
+
+clean.dependsOn cleanGenerated
+
+// ============================================================================
+// MetaModel Validation Tasks (inline plugin replacement)
+// ============================================================================
+
+/**
+ * Validates generated sources for a specific source set (main or test).
+ */
+def validateGeneratedSources(String sourceSet) {
+    def generatedDir = file("${buildDir}/generated/sources/annotationProcessor/java/${sourceSet}")
+
+    if (!generatedDir.exists()) {
+        println """
+⚠️  WARNING: No generated sources found at ${generatedDir}
+
+This might indicate that:
+1. No @MetaModel annotated classes exist in ${sourceSet} sources
+2. Annotation processor failed to run
+3. This is the first build (clean build)
+
+If you see compilation errors about missing classes (ClassName_, ClassNameFilter),
+the annotation processor has failed. Check the build output for errors.
+"""
+        return
+    }
+
+    println "✓ MetaModel generation directory exists: ${generatedDir}"
+
+    // Count generated files
+    def generatedFiles = []
+    generatedDir.eachFileRecurse { file ->
+        if (file.name.endsWith('.java')) {
+            generatedFiles << file.name
+        }
+    }
+
+    if (generatedFiles.isEmpty()) {
+        println """
+⚠️  WARNING: No generated Java files found in ${sourceSet} sources
+
+The annotation processor may have failed silently.
+Check for @MetaModel annotated classes in your ${sourceSet} source code.
+"""
+    } else {
+        println "✓ Found ${generatedFiles.size()} generated files in ${sourceSet} sources"
+
+        // Group by type
+        def staticMetaModels = generatedFiles.findAll { it.endsWith('_.java') }
+        def filterModels = generatedFiles.findAll { it.endsWith('Filter.java') && !it.contains('Deserializer') }
+        def specServices = generatedFiles.findAll { it.contains('SpecificationService') }
+        def deserializers = generatedFiles.findAll { it.contains('Deserializer') }
+
+        println "  - StaticMetaModels: ${staticMetaModels.size()}"
+        println "  - FilterMetaModels: ${filterModels.size()}"
+        println "  - SpecificationServices: ${specServices.size()}"
+        println "  - Deserializers: ${deserializers.size()}"
+    }
+}
+
+// Register validation task for main sources
+tasks.register('validateMetaModelGeneration') {
+    group = 'verification'
+    description = 'Validates that MetaModel annotation processor generated all required classes'
+
+    doLast {
+        println "\n=== MAIN SOURCE VALIDATION ==="
+        validateGeneratedSources('main')
+    }
+}
+
+// Register validation task for test sources
+tasks.register('validateTestMetaModelGeneration') {
+    group = 'verification'
+    description = 'Validates that MetaModel annotation processor generated classes for test sources'
+
+    doLast {
+        println "\n=== TEST SOURCE VALIDATION ==="
+        validateGeneratedSources('test')
+    }
+}
+// Ensure jacoco report runs after tests
+test.finalizedBy jacocoTestReport
+// Register combined validation task
+tasks.register('validateAllMetaModelGeneration') {
+    group = 'verification'
+    description = 'Validates MetaModel generation for both main and test sources'
+    dependsOn validateMetaModelGeneration, validateTestMetaModelGeneration
+}
+task testWithCoverage(dependsOn: ['test', 'jacocoTestReport']) {
+    group = "Verification"
+    description = "Run tests and generate coverage report for Spring Boot application"
+}
+// Validation tasks for annotation processor
+tasks.register('checkAnnotationProcessor') {
+    group = 'verification'
+    description = 'Checks if annotation processor is working correctly for both main and test sources'
+
+    dependsOn compileJava, compileTestJava
+    finalizedBy 'validateAllMetaModelGeneration'
+
+    doLast {
+        println """
+================================================================================
+ANNOTATION PROCESSOR CHECK COMPLETE
+================================================================================
+
+Run './gradlew validateAllMetaModelGeneration' to see detailed results.
+
+If you encountered errors, enable debug mode:
+  ./gradlew clean checkAnnotationProcessor -Dinmemory.processor.debug=true
+
+================================================================================
+"""
+    }
+}

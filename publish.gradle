@@ -1,0 +1,80 @@
+apply plugin: 'java'
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+
+// Configure publishing for Maven (Jenkins CI compliance)
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = project.group
+            artifactId = 'in-memory-spec-store'
+            version = project.version
+            from components.java
+
+            pom {
+                name = 'In Memory Spec Store'
+                description = 'In Memory Spec Store for in memory search and filter operations'
+                url = 'https://bitbucket.thy.com/projects/UDKP/repos/in-memory-spec-store/'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'thy-cure'
+                        name = 'THY CURE Team'
+                        email = 'cure@thy.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://bitbucket.thy.com/scm/usds/in-memory-spec-store.git'
+                    developerConnection = 'scm:git:ssh://bitbucket.thy.com/scm/usds/in-memory-spec-store.git'
+                    url = 'https://bitbucket.thy.com/projects/UDKP/repos/in-memory-spec-store/'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name = 'workspace-outputs'
+            url = "${projectDir}/outputs"
+        }
+    }
+
+}
+
+afterEvaluate {
+    tasks.named('generateMetadataFileForMavenJavaPublication') {
+        suppressedValidationErrors.add('dependencies-without-versions')
+    }
+}
+
+// Custom task to publish to workspace outputs
+tasks.register('publishToNexus') {
+    group = 'publishing'
+    description = 'Publishes the in-memory-spec-store library to workspace outputs (Jenkins will upload to Nexus)'
+
+    doLast {
+        println """
+        in-memory-spec-store published successfully to workspace outputs!
+
+        Artifact Details:
+           Group ID: ${project.group}
+           Artifact ID: in-memory-spec-store
+           Version: ${project.version}
+        
+        To use in other projects, add this dependency:
+           implementation '${project.group}:in-memory-spec-store:${project.version}'
+
+        Files published:
+           - in-memory-spec-store-${project.version}.jar (main library)
+           - in-memory-spec-store-${project.version}-sources.jar (source code)
+           - in-memory-spec-store-${project.version}.pom (Maven metadata)
+        """
+    }
+}
+
