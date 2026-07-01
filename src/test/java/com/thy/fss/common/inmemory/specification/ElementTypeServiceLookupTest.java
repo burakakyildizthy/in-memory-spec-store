@@ -219,22 +219,23 @@ class ElementTypeServiceLookupTest {
     @DisplayName("validateCollectionElement returns false for null element")
     void testValidateCollectionElementWithNullElement() {
         User user = null;
+        // With null element, validateCollectionElement delegates to the element service's
+        // validateFilter which will throw if filter is not the correct type
         Object filter = new Object();
 
-        boolean result = service.testValidateCollectionElement(user, filter, User.class);
-
-        assertThat(result).isFalse();
+        assertThatThrownBy(() -> service.testValidateCollectionElement(user, filter, User.class))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    @DisplayName("validateCollectionElement returns false for null filter")
+    @DisplayName("validateCollectionElement returns true for null filter")
     void testValidateCollectionElementWithNullFilter() {
         User user = new User();
         Object filter = null;
 
         boolean result = service.testValidateCollectionElement(user, filter, User.class);
 
-        assertThat(result).isFalse();
+        assertThat(result).isTrue();
     }
 
     @Test

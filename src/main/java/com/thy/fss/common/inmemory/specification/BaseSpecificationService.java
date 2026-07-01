@@ -1014,8 +1014,8 @@ public abstract class BaseSpecificationService<T> implements SpecificationServic
      * @throws IllegalStateException if the element type is a model type but no service is found
      */
     protected <E> boolean validateCollectionElement(E element, Object elementFilter, Class<E> elementTypeClass) {
-        if (element == null || elementFilter == null) {
-            return false;
+        if (elementFilter == null) {
+            return true;
         }
 
         // Get the element type service
@@ -1029,7 +1029,7 @@ public abstract class BaseSpecificationService<T> implements SpecificationServic
             return false;
         }
 
-        // Delegate validation to the element type's specification service
+        // Delegate validation to the element type's specification service (handles null element correctly)
         return elementService.validateFilter(element, elementFilter);
     }
 }
