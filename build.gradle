@@ -16,7 +16,7 @@ System.setProperty('https.protocols', 'TLSv1.2,TLSv1.3')
 System.setProperty('jdk.tls.client.protocols', 'TLSv1.2,TLSv1.3')
 
 group = 'com.thy.fss.common'
-version = '4.0.0.37'
+version = '4.0.0.40'
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
