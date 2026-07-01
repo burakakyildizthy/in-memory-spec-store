@@ -21,6 +21,14 @@ public class TemporalFilter<F extends Comparable<? super F>> extends Filter<F> {
     private F isOnOrBefore;
     @JsonProperty("oaf")
     private F isOnOrAfter;
+    @JsonProperty("nbe")
+    private F notIsBefore;
+    @JsonProperty("naf")
+    private F notIsAfter;
+    @JsonProperty("nobe")
+    private F notIsOnOrBefore;
+    @JsonProperty("noaf")
+    private F notIsOnOrAfter;
     @JsonProperty("last")
     private TemporalPreset last;
     @JsonProperty("next")
@@ -44,6 +52,10 @@ public class TemporalFilter<F extends Comparable<? super F>> extends Filter<F> {
         this.isAfter = filter.isAfter;
         this.isOnOrBefore = filter.isOnOrBefore;
         this.isOnOrAfter = filter.isOnOrAfter;
+        this.notIsBefore = filter.notIsBefore;
+        this.notIsAfter = filter.notIsAfter;
+        this.notIsOnOrBefore = filter.notIsOnOrBefore;
+        this.notIsOnOrAfter = filter.notIsOnOrAfter;
         this.last = filter.last;
         this.next = filter.next;
     }
@@ -124,6 +136,82 @@ public class TemporalFilter<F extends Comparable<? super F>> extends Filter<F> {
         return this;
     }
 
+    /**
+     * Gets the notIsBefore filter value.
+     *
+     * @return The value for not is before comparison
+     */
+    public F getNotIsBefore() {
+        return notIsBefore;
+    }
+
+    /**
+     * Sets the notIsBefore filter value.
+     *
+     * @param notIsBefore The value for not is before comparison
+     */
+    public TemporalFilter<F> setNotIsBefore(F notIsBefore) {
+        this.notIsBefore = notIsBefore;
+        return this;
+    }
+
+    /**
+     * Gets the notIsAfter filter value.
+     *
+     * @return The value for not is after comparison
+     */
+    public F getNotIsAfter() {
+        return notIsAfter;
+    }
+
+    /**
+     * Sets the notIsAfter filter value.
+     *
+     * @param notIsAfter The value for not is after comparison
+     */
+    public TemporalFilter<F> setNotIsAfter(F notIsAfter) {
+        this.notIsAfter = notIsAfter;
+        return this;
+    }
+
+    /**
+     * Gets the notIsOnOrBefore filter value.
+     *
+     * @return The value for not is on or before comparison
+     */
+    public F getNotIsOnOrBefore() {
+        return notIsOnOrBefore;
+    }
+
+    /**
+     * Sets the notIsOnOrBefore filter value.
+     *
+     * @param notIsOnOrBefore The value for not is on or before comparison
+     */
+    public TemporalFilter<F> setNotIsOnOrBefore(F notIsOnOrBefore) {
+        this.notIsOnOrBefore = notIsOnOrBefore;
+        return this;
+    }
+
+    /**
+     * Gets the notIsOnOrAfter filter value.
+     *
+     * @return The value for not is on or after comparison
+     */
+    public F getNotIsOnOrAfter() {
+        return notIsOnOrAfter;
+    }
+
+    /**
+     * Sets the notIsOnOrAfter filter value.
+     *
+     * @param notIsOnOrAfter The value for not is on or after comparison
+     */
+    public TemporalFilter<F> setNotIsOnOrAfter(F notIsOnOrAfter) {
+        this.notIsOnOrAfter = notIsOnOrAfter;
+        return this;
+    }
+
     public TemporalPreset getLast() {
         return last;
     }
@@ -151,13 +239,18 @@ public class TemporalFilter<F extends Comparable<? super F>> extends Filter<F> {
             && Objects.equals(isAfter, that.isAfter)
             && Objects.equals(isOnOrBefore, that.isOnOrBefore)
             && Objects.equals(isOnOrAfter, that.isOnOrAfter)
+            && Objects.equals(notIsBefore, that.notIsBefore)
+            && Objects.equals(notIsAfter, that.notIsAfter)
+            && Objects.equals(notIsOnOrBefore, that.notIsOnOrBefore)
+            && Objects.equals(notIsOnOrAfter, that.notIsOnOrAfter)
             && Objects.equals(last, that.last)
             && Objects.equals(next, that.next);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), isBefore, isAfter, isOnOrBefore, isOnOrAfter, last, next);
+        return Objects.hash(super.hashCode(), isBefore, isAfter, isOnOrBefore, isOnOrAfter,
+            notIsBefore, notIsAfter, notIsOnOrBefore, notIsOnOrAfter, last, next);
     }
 
     @Override
@@ -167,6 +260,10 @@ public class TemporalFilter<F extends Comparable<? super F>> extends Filter<F> {
                 ", isAfter=" + isAfter +
                 ", isOnOrBefore=" + isOnOrBefore +
                 ", isOnOrAfter=" + isOnOrAfter +
+                ", notIsBefore=" + notIsBefore +
+                ", notIsAfter=" + notIsAfter +
+                ", notIsOnOrBefore=" + notIsOnOrBefore +
+                ", notIsOnOrAfter=" + notIsOnOrAfter +
             ", last=" + last +
             ", next=" + next +
                 '}';

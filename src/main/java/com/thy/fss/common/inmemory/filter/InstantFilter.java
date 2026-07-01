@@ -84,4 +84,28 @@ public class InstantFilter extends TemporalFilter<Instant> {
         super.setIsOnOrAfter(isOnOrAfter);
         return this;
     }
+
+    @Override
+    public InstantFilter setNotIsBefore(Instant notIsBefore) {
+        super.setNotIsBefore(notIsBefore);
+        return this;
+    }
+
+    @Override
+    public InstantFilter setNotIsAfter(Instant notIsAfter) {
+        super.setNotIsAfter(notIsAfter);
+        return this;
+    }
+
+    @Override
+    public InstantFilter setNotIsOnOrBefore(Instant notIsOnOrBefore) {
+        super.setNotIsOnOrBefore(notIsOnOrBefore);
+        return this;
+    }
+
+    @Override
+    public InstantFilter setNotIsOnOrAfter(Instant notIsOnOrAfter) {
+        super.setNotIsOnOrAfter(notIsOnOrAfter);
+        return this;
+    }
 }

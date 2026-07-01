@@ -85,4 +85,28 @@ public class LocalDateTimeFilter extends TemporalFilter<LocalDateTime> {
         super.setIsOnOrAfter(isOnOrAfter);
         return this;
     }
+
+    @Override
+    public LocalDateTimeFilter setNotIsBefore(LocalDateTime notIsBefore) {
+        super.setNotIsBefore(notIsBefore);
+        return this;
+    }
+
+    @Override
+    public LocalDateTimeFilter setNotIsAfter(LocalDateTime notIsAfter) {
+        super.setNotIsAfter(notIsAfter);
+        return this;
+    }
+
+    @Override
+    public LocalDateTimeFilter setNotIsOnOrBefore(LocalDateTime notIsOnOrBefore) {
+        super.setNotIsOnOrBefore(notIsOnOrBefore);
+        return this;
+    }
+
+    @Override
+    public LocalDateTimeFilter setNotIsOnOrAfter(LocalDateTime notIsOnOrAfter) {
+        super.setNotIsOnOrAfter(notIsOnOrAfter);
+        return this;
+    }
 }

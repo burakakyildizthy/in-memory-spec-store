@@ -105,6 +105,8 @@ public class StaticSpecificationServiceGenerator {
         // Numeric operators (Integer, Long, Double, Float, Byte, Short)
         Set<Operator> numericOps = Set.of(Operator.EQUALS, Operator.NOT_EQUALS, Operator.GREATER_THAN, Operator.LESS_THAN,
                 Operator.GREATER_OR_EQUAL_THAN, Operator.LESS_OR_EQUAL_THAN,
+                Operator.NOT_GREATER_THAN, Operator.NOT_LESS_THAN,
+                Operator.NOT_GREATER_OR_EQUAL_THAN, Operator.NOT_LESS_OR_EQUAL_THAN,
                 Operator.IS_NULL, Operator.IS_NOT_NULL, Operator.IN, Operator.NOT_IN);
         operators.put("Integer", numericOps);
         operators.put("Long", numericOps);
@@ -129,6 +131,8 @@ public class StaticSpecificationServiceGenerator {
         // Date/Time operators
         Set<Operator> dateTimeOps = Set.of(Operator.EQUALS, Operator.NOT_EQUALS, Operator.IS_BEFORE, Operator.IS_AFTER,
                 Operator.IS_ON_OR_BEFORE, Operator.IS_ON_OR_AFTER,
+                Operator.NOT_IS_BEFORE, Operator.NOT_IS_AFTER,
+                Operator.NOT_IS_ON_OR_BEFORE, Operator.NOT_IS_ON_OR_AFTER,
             Operator.LAST, Operator.NEXT,
                 Operator.IS_NULL, Operator.IS_NOT_NULL, Operator.IN, Operator.NOT_IN);
         operators.put("LocalDate", dateTimeOps);
@@ -945,6 +949,78 @@ public class StaticSpecificationServiceGenerator {
                     out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) >= 0;");
                 }
             }
+            case NOT_GREATER_THAN -> {
+                if (isPrimitiveType(field.fieldTypeName)) {
+                    out.println("        return " + fieldAccess + " <= value;");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) <= 0;");
+                }
+            }
+            case NOT_LESS_THAN -> {
+                if (isPrimitiveType(field.fieldTypeName)) {
+                    out.println("        return " + fieldAccess + " >= value;");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) >= 0;");
+                }
+            }
+            case NOT_GREATER_OR_EQUAL_THAN -> {
+                if (isPrimitiveType(field.fieldTypeName)) {
+                    out.println("        return " + fieldAccess + " < value;");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) < 0;");
+                }
+            }
+            case NOT_LESS_OR_EQUAL_THAN -> {
+                if (isPrimitiveType(field.fieldTypeName)) {
+                    out.println("        return " + fieldAccess + " > value;");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) > 0;");
+                }
+            }
+            case NOT_IS_BEFORE -> {
+                if (field.validationPrefix.equals("LocalDate")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isBefore(value);");
+                } else if (field.validationPrefix.equals("LocalDateTime")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isBefore(value);");
+                } else if (field.validationPrefix.equals("Instant")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isBefore(value);");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) >= 0;");
+                }
+            }
+            case NOT_IS_AFTER -> {
+                if (field.validationPrefix.equals("LocalDate")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isAfter(value);");
+                } else if (field.validationPrefix.equals("LocalDateTime")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isAfter(value);");
+                } else if (field.validationPrefix.equals("Instant")) {
+                    out.println("        return " + fieldAccess + " != null && !" + fieldAccess + ".isAfter(value);");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) <= 0;");
+                }
+            }
+            case NOT_IS_ON_OR_BEFORE -> {
+                if (field.validationPrefix.equals("LocalDate")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isAfter(value);");
+                } else if (field.validationPrefix.equals("LocalDateTime")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isAfter(value);");
+                } else if (field.validationPrefix.equals("Instant")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isAfter(value);");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) > 0;");
+                }
+            }
+            case NOT_IS_ON_OR_AFTER -> {
+                if (field.validationPrefix.equals("LocalDate")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isBefore(value);");
+                } else if (field.validationPrefix.equals("LocalDateTime")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isBefore(value);");
+                } else if (field.validationPrefix.equals("Instant")) {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".isBefore(value);");
+                } else {
+                    out.println("        return " + fieldAccess + " != null && " + fieldAccess + ".compareTo(value) < 0;");
+                }
+            }
             case LAST -> {
                 out.println("        return com.thy.fss.common.inmemory.filter.TemporalPresetEvaluator.matchesLast(" + fieldAccess + ", value);");
             }
@@ -1009,6 +1085,14 @@ public class StaticSpecificationServiceGenerator {
             case IS_NOT_NULL -> "IsNotNull";
             case IN -> "In";
             case NOT_IN -> "NotIn";
+            case NOT_GREATER_THAN -> "NotGreaterThan";
+            case NOT_LESS_THAN -> "NotLessThan";
+            case NOT_GREATER_OR_EQUAL_THAN -> "NotGreaterOrEqualThan";
+            case NOT_LESS_OR_EQUAL_THAN -> "NotLessOrEqualThan";
+            case NOT_IS_BEFORE -> "NotIsBefore";
+            case NOT_IS_AFTER -> "NotIsAfter";
+            case NOT_IS_ON_OR_BEFORE -> "NotIsOnOrBefore";
+            case NOT_IS_ON_OR_AFTER -> "NotIsOnOrAfter";
             case COLLECTION_CONTAINS -> "CollectionContains";
             case COLLECTION_ANY -> "CollectionAny";
             case COLLECTION_ALL -> "CollectionAll";

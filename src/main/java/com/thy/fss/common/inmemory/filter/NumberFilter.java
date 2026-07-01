@@ -21,6 +21,14 @@ public class NumberFilter<F extends Comparable<? super F>> extends Filter<F> {
     private F greaterOrEqualThan;
     @JsonProperty("lte")
     private F lessOrEqualThan;
+    @JsonProperty("ngt")
+    private F notGreaterThan;
+    @JsonProperty("nlt")
+    private F notLessThan;
+    @JsonProperty("ngte")
+    private F notGreaterOrEqualThan;
+    @JsonProperty("nlte")
+    private F notLessOrEqualThan;
 
     /**
      * Default constructor.
@@ -40,6 +48,10 @@ public class NumberFilter<F extends Comparable<? super F>> extends Filter<F> {
         this.lessThan = filter.lessThan;
         this.greaterOrEqualThan = filter.greaterOrEqualThan;
         this.lessOrEqualThan = filter.lessOrEqualThan;
+        this.notGreaterThan = filter.notGreaterThan;
+        this.notLessThan = filter.notLessThan;
+        this.notGreaterOrEqualThan = filter.notGreaterOrEqualThan;
+        this.notLessOrEqualThan = filter.notLessOrEqualThan;
     }
 
     /**
@@ -122,6 +134,86 @@ public class NumberFilter<F extends Comparable<? super F>> extends Filter<F> {
         return this;
     }
 
+    /**
+     * Gets the notGreaterThan filter value.
+     *
+     * @return The value for not greater than comparison
+     */
+    public F getNotGreaterThan() {
+        return notGreaterThan;
+    }
+
+    /**
+     * Sets the notGreaterThan filter value.
+     *
+     * @param notGreaterThan The value for not greater than comparison
+     * @return This filter instance for method chaining
+     */
+    public NumberFilter<F> setNotGreaterThan(F notGreaterThan) {
+        this.notGreaterThan = notGreaterThan;
+        return this;
+    }
+
+    /**
+     * Gets the notLessThan filter value.
+     *
+     * @return The value for not less than comparison
+     */
+    public F getNotLessThan() {
+        return notLessThan;
+    }
+
+    /**
+     * Sets the notLessThan filter value.
+     *
+     * @param notLessThan The value for not less than comparison
+     * @return This filter instance for method chaining
+     */
+    public NumberFilter<F> setNotLessThan(F notLessThan) {
+        this.notLessThan = notLessThan;
+        return this;
+    }
+
+    /**
+     * Gets the notGreaterOrEqualThan filter value.
+     *
+     * @return The value for not greater than or equal comparison
+     */
+    public F getNotGreaterOrEqualThan() {
+        return notGreaterOrEqualThan;
+    }
+
+    /**
+     * Sets the notGreaterOrEqualThan filter value.
+     *
+     * @param notGreaterOrEqualThan The value for not greater than or equal comparison
+     * @return This filter instance for method chaining
+     */
+    public NumberFilter<F> setNotGreaterOrEqualThan(F notGreaterOrEqualThan) {
+        this.notGreaterOrEqualThan = notGreaterOrEqualThan;
+        return this;
+    }
+
+    /**
+     * Gets the notLessOrEqualThan filter value.
+     *
+     * @return The value for not less than or equal comparison
+     */
+    public F getNotLessOrEqualThan() {
+        return notLessOrEqualThan;
+    }
+
+    /**
+     * Sets the notLessOrEqualThan filter value.
+     *
+     * @param notLessOrEqualThan The value for not less than or equal comparison
+     * @return This filter instance for method chaining
+     */
+    public NumberFilter<F> setNotLessOrEqualThan(F notLessOrEqualThan) {
+        this.notLessOrEqualThan = notLessOrEqualThan;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,12 +224,17 @@ public class NumberFilter<F extends Comparable<? super F>> extends Filter<F> {
         return Objects.equals(greaterThan, that.greaterThan) &&
                 Objects.equals(lessThan, that.lessThan) &&
                 Objects.equals(greaterOrEqualThan, that.greaterOrEqualThan) &&
-                Objects.equals(lessOrEqualThan, that.lessOrEqualThan);
+                Objects.equals(lessOrEqualThan, that.lessOrEqualThan) &&
+                Objects.equals(notGreaterThan, that.notGreaterThan) &&
+                Objects.equals(notLessThan, that.notLessThan) &&
+                Objects.equals(notGreaterOrEqualThan, that.notGreaterOrEqualThan) &&
+                Objects.equals(notLessOrEqualThan, that.notLessOrEqualThan);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), greaterThan, lessThan, greaterOrEqualThan, lessOrEqualThan);
+        return Objects.hash(super.hashCode(), greaterThan, lessThan, greaterOrEqualThan, lessOrEqualThan,
+                notGreaterThan, notLessThan, notGreaterOrEqualThan, notLessOrEqualThan);
     }
 
     @Override
@@ -151,6 +248,10 @@ public class NumberFilter<F extends Comparable<? super F>> extends Filter<F> {
                 ", lessThan=" + lessThan +
                 ", greaterOrEqualThan=" + greaterOrEqualThan +
                 ", lessOrEqualThan=" + lessOrEqualThan +
+                ", notGreaterThan=" + notGreaterThan +
+                ", notLessThan=" + notLessThan +
+                ", notGreaterOrEqualThan=" + notGreaterOrEqualThan +
+                ", notLessOrEqualThan=" + notLessOrEqualThan +
                 '}';
     }
 }

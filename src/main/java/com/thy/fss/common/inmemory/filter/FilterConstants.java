@@ -21,6 +21,12 @@ public final class FilterConstants {
     public static final String FIELD_LT = "lt";
     public static final String FIELD_LTE = "lte";
 
+    // Negated numeric filter field names
+    public static final String FIELD_NGT = "ngt";
+    public static final String FIELD_NLT = "nlt";
+    public static final String FIELD_NGTE = "ngte";
+    public static final String FIELD_NLTE = "nlte";
+
     // String filter specific field names
     public static final String FIELD_CONT = "cont";
     public static final String FIELD_START = "start";
@@ -43,6 +49,12 @@ public final class FilterConstants {
     public static final String FIELD_ON_OR_AFTER = "oaf";
     public static final String FIELD_LAST = "last";
     public static final String FIELD_NEXT = "next";
+
+    // Negated temporal filter field names
+    public static final String FIELD_NOT_BEFORE = "nbe";
+    public static final String FIELD_NOT_AFTER = "naf";
+    public static final String FIELD_NOT_ON_OR_BEFORE = "nobe";
+    public static final String FIELD_NOT_ON_OR_AFTER = "noaf";
 
     // Performance: Pre-sized collections based on common usage patterns
     public static final int TYPICAL_IN_SIZE = 4;

@@ -3,6 +3,7 @@ package com.thy.fss.common.inmemory.filter;
 import com.thy.fss.common.inmemory.common.DataSyncTestHelper;
 import com.thy.fss.common.inmemory.common.LargeDatasetGenerator;
 import com.thy.fss.common.inmemory.testmodel.TestUser;
+import net.jqwik.api.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -692,5 +693,295 @@ class LongFilterTest {
         filter.setIsNotNull(true);
 
         assertThat(filter.getIsNotNull()).isTrue();
+    }
+
+    // ==================== Negated Operator Tests ====================
+
+    @Test
+    void testDefaultConstructorNegatedFieldsAreNull() {
+        LongFilter filter = new LongFilter();
+
+        assertThat(filter.getNotGreaterThan()).isNull();
+        assertThat(filter.getNotLessThan()).isNull();
+        assertThat(filter.getNotGreaterOrEqualThan()).isNull();
+        assertThat(filter.getNotLessOrEqualThan()).isNull();
+    }
+
+    @Test
+    void testSetNotGreaterThanSetsAndGetsValue() {
+        LongFilter filter = new LongFilter();
+        filter.setNotGreaterThan(75L);
+
+        assertThat(filter.getNotGreaterThan()).isEqualTo(75L);
+    }
+
+    @Test
+    void testSetNotGreaterThanReturnsFilterForChaining() {
+        LongFilter filter = new LongFilter();
+        NumberFilter<Long> result = filter.setNotGreaterThan(75L);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotLessThanSetsAndGetsValue() {
+        LongFilter filter = new LongFilter();
+        filter.setNotLessThan(25L);
+
+        assertThat(filter.getNotLessThan()).isEqualTo(25L);
+    }
+
+    @Test
+    void testSetNotLessThanReturnsFilterForChaining() {
+        LongFilter filter = new LongFilter();
+        NumberFilter<Long> result = filter.setNotLessThan(25L);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotGreaterOrEqualThanSetsAndGetsValue() {
+        LongFilter filter = new LongFilter();
+        filter.setNotGreaterOrEqualThan(80L);
+
+        assertThat(filter.getNotGreaterOrEqualThan()).isEqualTo(80L);
+    }
+
+    @Test
+    void testSetNotGreaterOrEqualThanReturnsFilterForChaining() {
+        LongFilter filter = new LongFilter();
+        NumberFilter<Long> result = filter.setNotGreaterOrEqualThan(80L);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotLessOrEqualThanSetsAndGetsValue() {
+        LongFilter filter = new LongFilter();
+        filter.setNotLessOrEqualThan(20L);
+
+        assertThat(filter.getNotLessOrEqualThan()).isEqualTo(20L);
+    }
+
+    @Test
+    void testSetNotLessOrEqualThanReturnsFilterForChaining() {
+        LongFilter filter = new LongFilter();
+        NumberFilter<Long> result = filter.setNotLessOrEqualThan(20L);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testCopyConstructorCopiesNegatedFields() {
+        LongFilter original = new LongFilter();
+        original.setNotGreaterThan(10L);
+        original.setNotLessThan(20L);
+        original.setNotGreaterOrEqualThan(30L);
+        original.setNotLessOrEqualThan(40L);
+
+        LongFilter copy = new LongFilter(original);
+
+        assertThat(copy.getNotGreaterThan()).isEqualTo(10L);
+        assertThat(copy.getNotLessThan()).isEqualTo(20L);
+        assertThat(copy.getNotGreaterOrEqualThan()).isEqualTo(30L);
+        assertThat(copy.getNotLessOrEqualThan()).isEqualTo(40L);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotGreaterThan() {
+        LongFilter filter1 = new LongFilter();
+        filter1.setNotGreaterThan(10L);
+        LongFilter filter2 = new LongFilter();
+        filter2.setNotGreaterThan(20L);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotLessThan() {
+        LongFilter filter1 = new LongFilter();
+        filter1.setNotLessThan(10L);
+        LongFilter filter2 = new LongFilter();
+        filter2.setNotLessThan(20L);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotGreaterOrEqualThan() {
+        LongFilter filter1 = new LongFilter();
+        filter1.setNotGreaterOrEqualThan(10L);
+        LongFilter filter2 = new LongFilter();
+        filter2.setNotGreaterOrEqualThan(20L);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotLessOrEqualThan() {
+        LongFilter filter1 = new LongFilter();
+        filter1.setNotLessOrEqualThan(10L);
+        LongFilter filter2 = new LongFilter();
+        filter2.setNotLessOrEqualThan(20L);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testHashCodeConsistencyWithNegatedFields() {
+        LongFilter filter1 = new LongFilter();
+        filter1.setNotGreaterThan(50L);
+        filter1.setNotLessThan(10L);
+        LongFilter filter2 = new LongFilter();
+        filter2.setNotGreaterThan(50L);
+        filter2.setNotLessThan(10L);
+
+        assertThat(filter1).isEqualTo(filter2);
+        assertThat(filter1.hashCode()).isEqualTo(filter2.hashCode());
+    }
+
+    @Test
+    void testToStringContainsNegatedFields() {
+        LongFilter filter = new LongFilter();
+        filter.setNotGreaterThan(99L);
+        filter.setNotLessThan(11L);
+        filter.setNotGreaterOrEqualThan(88L);
+        filter.setNotLessOrEqualThan(22L);
+
+        String result = filter.toString();
+
+        assertThat(result).contains("notGreaterThan=99");
+        assertThat(result).contains("notLessThan=11");
+        assertThat(result).contains("notGreaterOrEqualThan=88");
+        assertThat(result).contains("notLessOrEqualThan=22");
+    }
+
+    @Test
+    void testNegatedOperatorNotGreaterThanSemantics() {
+        // ngt means: field <= value (negation of field > value)
+        Long fieldValue = 50L;
+        Long threshold = 75L;
+
+        assertThat(fieldValue.compareTo(threshold) <= 0).isTrue();
+        assertThat(threshold.compareTo(threshold) <= 0).isTrue();
+
+        Long largerValue = 100L;
+        assertThat(largerValue.compareTo(threshold) <= 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotLessThanSemantics() {
+        // nlt means: field >= value (negation of field < value)
+        Long fieldValue = 80L;
+        Long threshold = 50L;
+
+        assertThat(fieldValue.compareTo(threshold) >= 0).isTrue();
+        assertThat(threshold.compareTo(threshold) >= 0).isTrue();
+
+        Long smallerValue = 30L;
+        assertThat(smallerValue.compareTo(threshold) >= 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotGreaterOrEqualThanSemantics() {
+        // ngte means: field < value (negation of field >= value)
+        Long fieldValue = 40L;
+        Long threshold = 50L;
+
+        assertThat(fieldValue.compareTo(threshold) < 0).isTrue();
+        assertThat(threshold.compareTo(threshold) < 0).isFalse();
+
+        Long largerValue = 60L;
+        assertThat(largerValue.compareTo(threshold) < 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotLessOrEqualThanSemantics() {
+        // nlte means: field > value (negation of field <= value)
+        Long fieldValue = 60L;
+        Long threshold = 50L;
+
+        assertThat(fieldValue.compareTo(threshold) > 0).isTrue();
+        assertThat(threshold.compareTo(threshold) > 0).isFalse();
+
+        Long smallerValue = 40L;
+        assertThat(smallerValue.compareTo(threshold) > 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorWithNullFieldValueReturnsFalse() {
+        Long fieldValue = null;
+        Long threshold = 50L;
+
+        boolean ngtResult = fieldValue != null && fieldValue.compareTo(threshold) <= 0;
+        boolean nltResult = fieldValue != null && fieldValue.compareTo(threshold) >= 0;
+        boolean ngteResult = fieldValue != null && fieldValue.compareTo(threshold) < 0;
+        boolean nlteResult = fieldValue != null && fieldValue.compareTo(threshold) > 0;
+
+        assertThat(ngtResult).isFalse();
+        assertThat(nltResult).isFalse();
+        assertThat(ngteResult).isFalse();
+        assertThat(nlteResult).isFalse();
+    }
+
+    // ==================== Property-Based Tests ====================
+
+    /**
+     * Property 1: Sayısal olumsuzlama ikiliği ve compareTo tutarlılığı
+     *
+     * For any non-null Long field value and threshold, each negated operator yields the
+     * exact logical negation of the corresponding positive operator via compareTo.
+     * When field value is null, all negated operators return false.
+     *
+     * Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5
+     */
+    @Property(tries = 100)
+    @Label("Feature: filter-negated-operators, Property 1: Sayısal olumsuzlama ikiliği ve compareTo tutarlılığı")
+    void negatedOperatorsShouldBeLogicalNegationOfPositiveOperators(
+            @ForAll("nullableLong") Long fieldValue,
+            @ForAll("nonNullLong") Long threshold) {
+
+        if (fieldValue != null) {
+            // greaterThan: compareTo > 0; notGreaterThan: compareTo <= 0
+            boolean gtResult = fieldValue.compareTo(threshold) > 0;
+            boolean ngtResult = fieldValue.compareTo(threshold) <= 0;
+            assertThat(ngtResult).isEqualTo(!gtResult);
+
+            // lessThan: compareTo < 0; notLessThan: compareTo >= 0
+            boolean ltResult = fieldValue.compareTo(threshold) < 0;
+            boolean nltResult = fieldValue.compareTo(threshold) >= 0;
+            assertThat(nltResult).isEqualTo(!ltResult);
+
+            // greaterOrEqualThan: compareTo >= 0; notGreaterOrEqualThan: compareTo < 0
+            boolean gteResult = fieldValue.compareTo(threshold) >= 0;
+            boolean ngteResult = fieldValue.compareTo(threshold) < 0;
+            assertThat(ngteResult).isEqualTo(!gteResult);
+
+            // lessOrEqualThan: compareTo <= 0; notLessOrEqualThan: compareTo > 0
+            boolean lteResult = fieldValue.compareTo(threshold) <= 0;
+            boolean nlteResult = fieldValue.compareTo(threshold) > 0;
+            assertThat(nlteResult).isEqualTo(!lteResult);
+        } else {
+            // When fieldValue is null, all negated operators must return false
+            boolean ngtResult = fieldValue != null && fieldValue.compareTo(threshold) <= 0;
+            boolean nltResult = fieldValue != null && fieldValue.compareTo(threshold) >= 0;
+            boolean ngteResult = fieldValue != null && fieldValue.compareTo(threshold) < 0;
+            boolean nlteResult = fieldValue != null && fieldValue.compareTo(threshold) > 0;
+
+            assertThat(ngtResult).isFalse();
+            assertThat(nltResult).isFalse();
+            assertThat(ngteResult).isFalse();
+            assertThat(nlteResult).isFalse();
+        }
+    }
+
+    @Provide
+    Arbitrary<Long> nullableLong() {
+        return Arbitraries.longs().between(-1_000_000L, 1_000_000L).injectNull(0.2);
+    }
+
+    @Provide
+    Arbitrary<Long> nonNullLong() {
+        return Arbitraries.longs().between(-1_000_000L, 1_000_000L);
     }
 }

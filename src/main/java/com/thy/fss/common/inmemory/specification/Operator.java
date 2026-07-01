@@ -15,6 +15,12 @@ public enum Operator {
     GREATER_OR_EQUAL_THAN,
     LESS_OR_EQUAL_THAN,
 
+    // Numeric negated comparison operators
+    NOT_GREATER_THAN,
+    NOT_LESS_THAN,
+    NOT_GREATER_OR_EQUAL_THAN,
+    NOT_LESS_OR_EQUAL_THAN,
+
     // String operators
     CONTAINS,
     STARTS_WITH,
@@ -38,6 +44,12 @@ public enum Operator {
     IS_ON_OR_AFTER,
     LAST,
     NEXT,
+
+    // Temporal negated operators
+    NOT_IS_BEFORE,
+    NOT_IS_AFTER,
+    NOT_IS_ON_OR_BEFORE,
+    NOT_IS_ON_OR_AFTER,
 
     // Null checking operators
     IS_NULL,

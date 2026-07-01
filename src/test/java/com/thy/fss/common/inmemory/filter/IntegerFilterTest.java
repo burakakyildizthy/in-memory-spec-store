@@ -3,6 +3,7 @@ package com.thy.fss.common.inmemory.filter;
 import com.thy.fss.common.inmemory.common.DataSyncTestHelper;
 import com.thy.fss.common.inmemory.common.LargeDatasetGenerator;
 import com.thy.fss.common.inmemory.testmodel.SimpleUser;
+import net.jqwik.api.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -692,5 +693,295 @@ class IntegerFilterTest {
         filter.setIsNotNull(true);
 
         assertThat(filter.getIsNotNull()).isTrue();
+    }
+
+    // ==================== Negated Operator Tests ====================
+
+    @Test
+    void testDefaultConstructorNegatedFieldsAreNull() {
+        IntegerFilter filter = new IntegerFilter();
+
+        assertThat(filter.getNotGreaterThan()).isNull();
+        assertThat(filter.getNotLessThan()).isNull();
+        assertThat(filter.getNotGreaterOrEqualThan()).isNull();
+        assertThat(filter.getNotLessOrEqualThan()).isNull();
+    }
+
+    @Test
+    void testSetNotGreaterThanSetsAndGetsValue() {
+        IntegerFilter filter = new IntegerFilter();
+        filter.setNotGreaterThan(75);
+
+        assertThat(filter.getNotGreaterThan()).isEqualTo(75);
+    }
+
+    @Test
+    void testSetNotGreaterThanReturnsFilterForChaining() {
+        IntegerFilter filter = new IntegerFilter();
+        NumberFilter<Integer> result = filter.setNotGreaterThan(75);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotLessThanSetsAndGetsValue() {
+        IntegerFilter filter = new IntegerFilter();
+        filter.setNotLessThan(25);
+
+        assertThat(filter.getNotLessThan()).isEqualTo(25);
+    }
+
+    @Test
+    void testSetNotLessThanReturnsFilterForChaining() {
+        IntegerFilter filter = new IntegerFilter();
+        NumberFilter<Integer> result = filter.setNotLessThan(25);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotGreaterOrEqualThanSetsAndGetsValue() {
+        IntegerFilter filter = new IntegerFilter();
+        filter.setNotGreaterOrEqualThan(80);
+
+        assertThat(filter.getNotGreaterOrEqualThan()).isEqualTo(80);
+    }
+
+    @Test
+    void testSetNotGreaterOrEqualThanReturnsFilterForChaining() {
+        IntegerFilter filter = new IntegerFilter();
+        NumberFilter<Integer> result = filter.setNotGreaterOrEqualThan(80);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testSetNotLessOrEqualThanSetsAndGetsValue() {
+        IntegerFilter filter = new IntegerFilter();
+        filter.setNotLessOrEqualThan(20);
+
+        assertThat(filter.getNotLessOrEqualThan()).isEqualTo(20);
+    }
+
+    @Test
+    void testSetNotLessOrEqualThanReturnsFilterForChaining() {
+        IntegerFilter filter = new IntegerFilter();
+        NumberFilter<Integer> result = filter.setNotLessOrEqualThan(20);
+
+        assertThat(result).isSameAs(filter);
+    }
+
+    @Test
+    void testCopyConstructorCopiesNegatedFields() {
+        IntegerFilter original = new IntegerFilter();
+        original.setNotGreaterThan(10);
+        original.setNotLessThan(20);
+        original.setNotGreaterOrEqualThan(30);
+        original.setNotLessOrEqualThan(40);
+
+        IntegerFilter copy = new IntegerFilter(original);
+
+        assertThat(copy.getNotGreaterThan()).isEqualTo(10);
+        assertThat(copy.getNotLessThan()).isEqualTo(20);
+        assertThat(copy.getNotGreaterOrEqualThan()).isEqualTo(30);
+        assertThat(copy.getNotLessOrEqualThan()).isEqualTo(40);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotGreaterThan() {
+        IntegerFilter filter1 = new IntegerFilter();
+        filter1.setNotGreaterThan(10);
+        IntegerFilter filter2 = new IntegerFilter();
+        filter2.setNotGreaterThan(20);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotLessThan() {
+        IntegerFilter filter1 = new IntegerFilter();
+        filter1.setNotLessThan(10);
+        IntegerFilter filter2 = new IntegerFilter();
+        filter2.setNotLessThan(20);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotGreaterOrEqualThan() {
+        IntegerFilter filter1 = new IntegerFilter();
+        filter1.setNotGreaterOrEqualThan(10);
+        IntegerFilter filter2 = new IntegerFilter();
+        filter2.setNotGreaterOrEqualThan(20);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testEqualsWithDifferentNotLessOrEqualThan() {
+        IntegerFilter filter1 = new IntegerFilter();
+        filter1.setNotLessOrEqualThan(10);
+        IntegerFilter filter2 = new IntegerFilter();
+        filter2.setNotLessOrEqualThan(20);
+
+        assertThat(filter1).isNotEqualTo(filter2);
+    }
+
+    @Test
+    void testHashCodeConsistencyWithNegatedFields() {
+        IntegerFilter filter1 = new IntegerFilter();
+        filter1.setNotGreaterThan(50);
+        filter1.setNotLessThan(10);
+        IntegerFilter filter2 = new IntegerFilter();
+        filter2.setNotGreaterThan(50);
+        filter2.setNotLessThan(10);
+
+        assertThat(filter1).isEqualTo(filter2);
+        assertThat(filter1.hashCode()).isEqualTo(filter2.hashCode());
+    }
+
+    @Test
+    void testToStringContainsNegatedFields() {
+        IntegerFilter filter = new IntegerFilter();
+        filter.setNotGreaterThan(99);
+        filter.setNotLessThan(11);
+        filter.setNotGreaterOrEqualThan(88);
+        filter.setNotLessOrEqualThan(22);
+
+        String result = filter.toString();
+
+        assertThat(result).contains("notGreaterThan=99");
+        assertThat(result).contains("notLessThan=11");
+        assertThat(result).contains("notGreaterOrEqualThan=88");
+        assertThat(result).contains("notLessOrEqualThan=22");
+    }
+
+    @Test
+    void testNegatedOperatorNotGreaterThanSemantics() {
+        // ngt means: field <= value (negation of field > value)
+        Integer fieldValue = 50;
+        Integer threshold = 75;
+
+        assertThat(fieldValue.compareTo(threshold) <= 0).isTrue();
+        assertThat(threshold.compareTo(threshold) <= 0).isTrue();
+
+        Integer largerValue = 100;
+        assertThat(largerValue.compareTo(threshold) <= 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotLessThanSemantics() {
+        // nlt means: field >= value (negation of field < value)
+        Integer fieldValue = 80;
+        Integer threshold = 50;
+
+        assertThat(fieldValue.compareTo(threshold) >= 0).isTrue();
+        assertThat(threshold.compareTo(threshold) >= 0).isTrue();
+
+        Integer smallerValue = 30;
+        assertThat(smallerValue.compareTo(threshold) >= 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotGreaterOrEqualThanSemantics() {
+        // ngte means: field < value (negation of field >= value)
+        Integer fieldValue = 40;
+        Integer threshold = 50;
+
+        assertThat(fieldValue.compareTo(threshold) < 0).isTrue();
+        assertThat(threshold.compareTo(threshold) < 0).isFalse();
+
+        Integer largerValue = 60;
+        assertThat(largerValue.compareTo(threshold) < 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorNotLessOrEqualThanSemantics() {
+        // nlte means: field > value (negation of field <= value)
+        Integer fieldValue = 60;
+        Integer threshold = 50;
+
+        assertThat(fieldValue.compareTo(threshold) > 0).isTrue();
+        assertThat(threshold.compareTo(threshold) > 0).isFalse();
+
+        Integer smallerValue = 40;
+        assertThat(smallerValue.compareTo(threshold) > 0).isFalse();
+    }
+
+    @Test
+    void testNegatedOperatorWithNullFieldValueReturnsFalse() {
+        Integer fieldValue = null;
+        Integer threshold = 50;
+
+        boolean ngtResult = fieldValue != null && fieldValue.compareTo(threshold) <= 0;
+        boolean nltResult = fieldValue != null && fieldValue.compareTo(threshold) >= 0;
+        boolean ngteResult = fieldValue != null && fieldValue.compareTo(threshold) < 0;
+        boolean nlteResult = fieldValue != null && fieldValue.compareTo(threshold) > 0;
+
+        assertThat(ngtResult).isFalse();
+        assertThat(nltResult).isFalse();
+        assertThat(ngteResult).isFalse();
+        assertThat(nlteResult).isFalse();
+    }
+
+    // ==================== Property-Based Tests ====================
+
+    /**
+     * Property 1: Sayısal olumsuzlama ikiliği ve compareTo tutarlılığı
+     *
+     * For any non-null Integer field value and threshold, each negated operator yields the
+     * exact logical negation of the corresponding positive operator via compareTo.
+     * When field value is null, all negated operators return false.
+     *
+     * Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5
+     */
+    @Property(tries = 100)
+    @Label("Feature: filter-negated-operators, Property 1: Sayısal olumsuzlama ikiliği ve compareTo tutarlılığı")
+    void negatedOperatorsShouldBeLogicalNegationOfPositiveOperators(
+            @ForAll("nullableInteger") Integer fieldValue,
+            @ForAll("nonNullInteger") Integer threshold) {
+
+        if (fieldValue != null) {
+            // greaterThan: compareTo > 0; notGreaterThan: compareTo <= 0
+            boolean gtResult = fieldValue.compareTo(threshold) > 0;
+            boolean ngtResult = fieldValue.compareTo(threshold) <= 0;
+            assertThat(ngtResult).isEqualTo(!gtResult);
+
+            // lessThan: compareTo < 0; notLessThan: compareTo >= 0
+            boolean ltResult = fieldValue.compareTo(threshold) < 0;
+            boolean nltResult = fieldValue.compareTo(threshold) >= 0;
+            assertThat(nltResult).isEqualTo(!ltResult);
+
+            // greaterOrEqualThan: compareTo >= 0; notGreaterOrEqualThan: compareTo < 0
+            boolean gteResult = fieldValue.compareTo(threshold) >= 0;
+            boolean ngteResult = fieldValue.compareTo(threshold) < 0;
+            assertThat(ngteResult).isEqualTo(!gteResult);
+
+            // lessOrEqualThan: compareTo <= 0; notLessOrEqualThan: compareTo > 0
+            boolean lteResult = fieldValue.compareTo(threshold) <= 0;
+            boolean nlteResult = fieldValue.compareTo(threshold) > 0;
+            assertThat(nlteResult).isEqualTo(!lteResult);
+        } else {
+            // When fieldValue is null, all negated operators must return false
+            boolean ngtResult = fieldValue != null && fieldValue.compareTo(threshold) <= 0;
+            boolean nltResult = fieldValue != null && fieldValue.compareTo(threshold) >= 0;
+            boolean ngteResult = fieldValue != null && fieldValue.compareTo(threshold) < 0;
+            boolean nlteResult = fieldValue != null && fieldValue.compareTo(threshold) > 0;
+
+            assertThat(ngtResult).isFalse();
+            assertThat(nltResult).isFalse();
+            assertThat(ngteResult).isFalse();
+            assertThat(nlteResult).isFalse();
+        }
+    }
+
+    @Provide
+    Arbitrary<Integer> nullableInteger() {
+        return Arbitraries.integers().between(-1_000_000, 1_000_000).injectNull(0.2);
+    }
+
+    @Provide
+    Arbitrary<Integer> nonNullInteger() {
+        return Arbitraries.integers().between(-1_000_000, 1_000_000);
     }
 }

@@ -63,6 +63,24 @@ class FilterConstantsTest {
     }
 
     @Test
+    @DisplayName("Should have correct negated numeric filter field names")
+    void shouldHaveCorrectNegatedNumericFilterFieldNames() {
+        assertThat(FilterConstants.FIELD_NGT).isEqualTo("ngt");
+        assertThat(FilterConstants.FIELD_NLT).isEqualTo("nlt");
+        assertThat(FilterConstants.FIELD_NGTE).isEqualTo("ngte");
+        assertThat(FilterConstants.FIELD_NLTE).isEqualTo("nlte");
+    }
+
+    @Test
+    @DisplayName("Should have correct negated temporal filter field names")
+    void shouldHaveCorrectNegatedTemporalFilterFieldNames() {
+        assertThat(FilterConstants.FIELD_NOT_BEFORE).isEqualTo("nbe");
+        assertThat(FilterConstants.FIELD_NOT_AFTER).isEqualTo("naf");
+        assertThat(FilterConstants.FIELD_NOT_ON_OR_BEFORE).isEqualTo("nobe");
+        assertThat(FilterConstants.FIELD_NOT_ON_OR_AFTER).isEqualTo("noaf");
+    }
+
+    @Test
     @DisplayName("Should have correct performance constants")
     void shouldHaveCorrectPerformanceConstants() {
         assertThat(FilterConstants.TYPICAL_IN_SIZE).isEqualTo(4);

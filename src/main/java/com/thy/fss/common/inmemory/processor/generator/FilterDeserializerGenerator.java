@@ -753,6 +753,10 @@ public class FilterDeserializerGenerator {
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_AFTER", "setIsAfter", "parseLocalDateTime_createdAt(p.getText())");
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_ON_OR_BEFORE", "setIsOnOrBefore", "parseLocalDateTime_createdAt(p.getText())");
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_ON_OR_AFTER", "setIsOnOrAfter", "parseLocalDateTime_createdAt(p.getText())");
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_BEFORE", "setNotIsBefore", "parseLocalDateTime_createdAt(p.getText())");
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_AFTER", "setNotIsAfter", "parseLocalDateTime_createdAt(p.getText())");
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_ON_OR_BEFORE", "setNotIsOnOrBefore", "parseLocalDateTime_createdAt(p.getText())");
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_ON_OR_AFTER", "setNotIsOnOrAfter", "parseLocalDateTime_createdAt(p.getText())");
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LAST", "setLast", "com.thy.fss.common.inmemory.filter.TemporalPresetParser.parse(p.getText())");
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NEXT", "setNext", "com.thy.fss.common.inmemory.filter.TemporalPresetParser.parse(p.getText())");
         }
@@ -763,6 +767,10 @@ public class FilterDeserializerGenerator {
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_GTE", "setGreaterOrEqualThan", GET_INT_VALUE);
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LT", "setLessThan", GET_INT_VALUE);
             generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LTE", "setLessOrEqualThan", GET_INT_VALUE);
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NGT", "setNotGreaterThan", GET_INT_VALUE);
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NGTE", "setNotGreaterOrEqualThan", GET_INT_VALUE);
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NLT", "setNotLessThan", GET_INT_VALUE);
+            generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NLTE", "setNotLessOrEqualThan", GET_INT_VALUE);
         }
     }
 
@@ -787,6 +795,10 @@ public class FilterDeserializerGenerator {
         generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_AFTER", "setIsAfter", parseMethod);
         generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_ON_OR_BEFORE", "setIsOnOrBefore", parseMethod);
         generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_ON_OR_AFTER", "setIsOnOrAfter", parseMethod);
+        generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_BEFORE", "setNotIsBefore", parseMethod);
+        generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_AFTER", "setNotIsAfter", parseMethod);
+        generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_ON_OR_BEFORE", "setNotIsOnOrBefore", parseMethod);
+        generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NOT_ON_OR_AFTER", "setNotIsOnOrAfter", parseMethod);
         generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LAST", "setLast", "com.thy.fss.common.inmemory.filter.TemporalPresetParser.parse(p.getText())");
         generateSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NEXT", "setNext", "com.thy.fss.common.inmemory.filter.TemporalPresetParser.parse(p.getText())");
     }
@@ -828,6 +840,10 @@ public class FilterDeserializerGenerator {
         generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_GTE", "setGreaterOrEqualThan", parseMethod);
         generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LT", "setLessThan", parseMethod);
         generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_LTE", "setLessOrEqualThan", parseMethod);
+        generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NGT", "setNotGreaterThan", parseMethod);
+        generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NGTE", "setNotGreaterOrEqualThan", parseMethod);
+        generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NLT", "setNotLessThan", parseMethod);
+        generateNumericSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NLTE", "setNotLessOrEqualThan", parseMethod);
         generateNumericArraySwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_IN", "setIn", elementType, parseMethod);
         generateNumericArraySwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_NIN", "setNotIn", elementType, parseMethod);
         generateBooleanSwitchCase(out, FilterConstants.class.getSimpleName() + ".FIELD_ISN", "setIsNull");
@@ -1326,10 +1342,18 @@ public class FilterDeserializerGenerator {
             case FilterConstants.FIELD_GTE -> "setGreaterOrEqualThan";
             case FilterConstants.FIELD_LT -> "setLessThan";
             case FilterConstants.FIELD_LTE -> "setLessOrEqualThan";
+            case FilterConstants.FIELD_NGT -> "setNotGreaterThan";
+            case FilterConstants.FIELD_NLT -> "setNotLessThan";
+            case FilterConstants.FIELD_NGTE -> "setNotGreaterOrEqualThan";
+            case FilterConstants.FIELD_NLTE -> "setNotLessOrEqualThan";
             case FilterConstants.FIELD_BEFORE -> "setIsBefore";
             case FilterConstants.FIELD_AFTER -> "setIsAfter";
             case FilterConstants.FIELD_ON_OR_BEFORE -> "setIsOnOrBefore";
             case FilterConstants.FIELD_ON_OR_AFTER -> "setIsOnOrAfter";
+            case FilterConstants.FIELD_NOT_BEFORE -> "setNotIsBefore";
+            case FilterConstants.FIELD_NOT_AFTER -> "setNotIsAfter";
+            case FilterConstants.FIELD_NOT_ON_OR_BEFORE -> "setNotIsOnOrBefore";
+            case FilterConstants.FIELD_NOT_ON_OR_AFTER -> "setNotIsOnOrAfter";
             case FilterConstants.FIELD_LAST -> "setLast";
             case FilterConstants.FIELD_NEXT -> "setNext";
             default -> throw new IllegalArgumentException("Unknown element operator: " + elementOperator);
@@ -2449,8 +2473,8 @@ public class FilterDeserializerGenerator {
             return "FIELD";
         }
 
-        // Convert to uppercase and replace non-alphanumeric characters with underscores
-        return fieldName.toUpperCase()
+        // Convert to uppercase using ROOT locale (avoids Turkish İ/i issue) and replace non-alphanumeric characters with underscores
+        return fieldName.toUpperCase(java.util.Locale.ROOT)
                 .replaceAll("[^A-Z0-9]", "_")
                 .replaceAll("_+", "_") // Replace multiple underscores with single
                 .replaceAll("^_|_$", ""); // Remove leading/trailing underscores
@@ -2693,11 +2717,19 @@ public class FilterDeserializerGenerator {
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_GTE, "setGreaterOrEqualThan", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_LT, "setLessThan", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_LTE, "setLessOrEqualThan", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NGT, "setNotGreaterThan", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NLT, "setNotLessThan", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NGTE, "setNotGreaterOrEqualThan", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NLTE, "setNotLessOrEqualThan", false);
             } else if (config.isTemporal()) {
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_BEFORE, "setIsBefore", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_AFTER, "setIsAfter", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_ON_OR_BEFORE, "setIsOnOrBefore", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_ON_OR_AFTER, "setIsOnOrAfter", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NOT_BEFORE, "setNotIsBefore", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NOT_AFTER, "setNotIsAfter", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NOT_ON_OR_BEFORE, "setNotIsOnOrBefore", false);
+                generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NOT_ON_OR_AFTER, "setNotIsOnOrAfter", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_LAST, "setLast", false);
                 generateBindCase(out, fieldName, filterType, fieldType, FilterConstants.FIELD_NEXT, "setNext", false);
             }

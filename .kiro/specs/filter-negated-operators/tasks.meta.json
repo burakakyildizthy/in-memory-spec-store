@@ -1,0 +1,542 @@
+{
+  "pbtResults": {
+    "3.4 Özellik testi: kopyalama kurucusu eşitliği": {
+      "status": "passed",
+      "lastRunTimestamp": 1782928142683
+    },
+    "3.5 Özellik testi: equals/hashCode dahiliyeti ve tutarlılığı": {
+      "status": "passed",
+      "lastRunTimestamp": 1782928375390
+    },
+    "3.6 Özellik testi: erişimci çevrimi ve zincirlenebilir setter": {
+      "status": "passed",
+      "lastRunTimestamp": 1782928575737
+    },
+    "6.5 Özellik testi: zamansal olumsuzlama ikiliği": {
+      "status": "passed",
+      "lastRunTimestamp": 1782928851607
+    },
+    "6.4 Özellik testi: sayısal olumsuzlama ikiliği": {
+      "status": "passed",
+      "lastRunTimestamp": 1782933714625
+    },
+    "6.6 Özellik testi: validateFilter mantıksal VE kombinasyonu": {
+      "status": "not_run",
+      "lastRunTimestamp": 1782934280842
+    },
+    "6.7 Özellik testi: geriye dönük uyumluluk (olumsuz alanlar null)": {
+      "status": "passed",
+      "lastRunTimestamp": 1782934687554
+    }
+  },
+  "executionHistory": {
+    "1.1 FilterConstants olumsuz operatör sabitlerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419297
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926429923
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926819732
+      }
+    ],
+    "1.2 Operator enum olumsuz değerlerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419556
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926430851
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926820576
+      }
+    ],
+    "1.3 FilterConstants sabit değerleri ve Operator enum varlığı için birim testleri": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419624
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927522086
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927856777
+      }
+    ],
+    "2.1 NumberFilter olumsuz alanlarını, erişimcilerini ve nesne metotlarını uygula": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419664
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926825050
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926969024
+      }
+    ],
+    "2.2 TemporalFilter olumsuz alanlarını, erişimcilerini ve nesne metotlarını uygula": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419721
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926826014
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926969960
+      }
+    ],
+    "3.1 InstantFilter setter ezmelerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419757
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926974736
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927160295
+      }
+    ],
+    "3.2 LocalDateFilter setter ezmelerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419797
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926975454
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927160978
+      }
+    ],
+    "3.3 LocalDateTimeFilter setter ezmelerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419837
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926976260
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927161781
+      }
+    ],
+    "3.4 Özellik testi: kopyalama kurucusu eşitliği": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419878
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927864063
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928159456
+      }
+    ],
+    "3.5 Özellik testi: equals/hashCode dahiliyeti ve tutarlılığı": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419919
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928164107
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928392817
+      }
+    ],
+    "3.6 Özellik testi: erişimci çevrimi ve zincirlenebilir setter": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926419961
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928397424
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928593012
+      }
+    ],
+    "4. Checkpoint - Filtre modeli ve alt sınıflar derlenmeli": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420009
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940519148
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940523857
+      }
+    ],
+    "5.1 JSON gövdesi switch case'lerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420047
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926977173
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927163028
+      }
+    ],
+    "5.2 Sorgu parametresi bind case'lerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420095
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927169490
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927311406
+      }
+    ],
+    "5.3 Element-operatör setter-ad eşleme case'lerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420131
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927316683
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927511318
+      }
+    ],
+    "5.4 Özellik testi: JSON çevrimi (round-trip) korunumu": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420173
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934334180
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934501286
+      }
+    ],
+    "6.1 Desteklenen operatör kümelerine olumsuz operatörleri ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420228
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926978119
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927164827
+      }
+    ],
+    "6.2 getOperatorMethodSuffix eşlemelerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420268
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927170324
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927312236
+      }
+    ],
+    "6.3 Karşılaştırma mantığı switch case'lerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420302
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927317573
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927512455
+      }
+    ],
+    "6.4 Özellik testi: sayısal olumsuzlama ikiliği": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420338
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928598076
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782933734746
+      }
+    ],
+    "6.5 Özellik testi: zamansal olumsuzlama ikiliği": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420372
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928598848
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782933735626
+      }
+    ],
+    "6.6 Özellik testi: validateFilter mantıksal VE kombinasyonu": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420407
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782933740234
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934329593
+      }
+    ],
+    "6.7 Özellik testi: geriye dönük uyumluluk (olumsuz alanlar null)": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420441
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934505731
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934706366
+      }
+    ],
+    "7. Checkpoint - Üretim zamanı (annotation processing) derlemesi başarılı olmalı": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420482
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940528621
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940533466
+      }
+    ],
+    "8.1 NumberFilter olumsuz operatör kapsam testlerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420519
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927523007
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927858051
+      }
+    ],
+    "8.2 TemporalFilter olumsuz operatör kapsam testlerini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420575
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927523906
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927859006
+      }
+    ],
+    "9.1 Gradle ile derleme ve tüm testleri çalıştır": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926420610
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934712151
+      },
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940512667
+      }
+    ],
+    "2. Filtre modeline olumsuz operatör alanlarını ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782926970006
+      }
+    ],
+    "1. Paylaşılan temel bileşenleri ekle (sabitler ve operatörler)": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927856813
+      }
+    ],
+    "8. Kapsam testlerini mevcut filtre test sınıflarına ekle (Gereksinim 16, additive)": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782927859050
+      }
+    ],
+    "3. TemporalFilter alt sınıflarında setter ezmelerini ve model düzeyi özellik testlerini uygula": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782928593080
+      }
+    ],
+    "5. FilterDeserializerGenerator olumsuz operatör üretimini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934501339
+      }
+    ],
+    "6. StaticSpecificationServiceGenerator olumsuz operatör üretimini ekle": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782934706435
+      }
+    ],
+    "9. Son doğrulama - Gradle derleme ve testleri çalıştır": [
+      {
+        "executionId": "3e4385d7-1371-4be0-a7ca-dd7db354f329",
+        "chatSessionId": "sess_7f4b0268-c4a0-48aa-bc3b-501d11ddd075",
+        "timestamp": 1782940512717
+      }
+    ]
+  }
+}
