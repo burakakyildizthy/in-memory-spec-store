@@ -1817,6 +1817,10 @@ public class FilterMetaModelGenerator {
             for (FieldInfo field : fields) {
                 if (field.annotationConfig() != null) {
                     FilterFieldConfig config = field.annotationConfig();
+                    // Process collection fields to detect model element types and set import metadata
+                    if (config.isCollection()) {
+                        filterDeserializerGenerator.processCollectionField(config);
+                    }
                     fieldConfigs.add(config);
                     debugLog("Added field '" + field.name() + "' to deserializer generation");
                 }
