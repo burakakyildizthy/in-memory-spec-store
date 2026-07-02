@@ -9,6 +9,7 @@ import com.thy.fss.common.inmemory.processor.model.*;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -406,8 +407,9 @@ public class FilterMetaModelGenerator {
         imports.add("com.thy.fss.common.inmemory.filter.EnumFilter");
         imports.add("com.thy.fss.common.inmemory.filter.CollectionFilter");
 
-        // Analyze fields for additional imports
-        for (Element enclosedElement : typeElement.getEnclosedElements()) {
+        // Analyze fields for additional imports (including inherited fields)
+        List<Element> allFields = getAllFields(typeElement);
+        for (Element enclosedElement : allFields) {
             if (enclosedElement.getKind() == ElementKind.FIELD) {
                 VariableElement field = (VariableElement) enclosedElement;
                 addFieldImports(imports, field);
@@ -420,6 +422,43 @@ public class FilterMetaModelGenerator {
     }
 
     /**
+     * Gets all fields including inherited fields from @MetaModel superclasses.
+     */
+    private List<Element> getAllFields(TypeElement typeElement) {
+        List<Element> allFields = new ArrayList<>();
+
+        // Add fields from current class
+        for (Element enclosedElement : typeElement.getEnclosedElements()) {
+            if (enclosedElement.getKind() == ElementKind.FIELD &&
+                    !enclosedElement.getModifiers().contains(Modifier.STATIC)) {
+                allFields.add(enclosedElement);
+            }
+        }
+
+        // Add fields from superclass (inheritance support)
+        try {
+            TypeMirror superclass = typeElement.getSuperclass();
+            if (superclass != null && superclass.getKind() != TypeKind.NONE) {
+                javax.lang.model.util.Types typeUtils = processingEnv.getTypeUtils();
+                if (typeUtils != null) {
+                    Element superElement = typeUtils.asElement(superclass);
+                    if (superElement instanceof TypeElement superTypeElement) {
+                        if (superTypeElement.getAnnotation(MetaModel.class) != null) {
+                            List<Element> inheritedFields = getAllFields(superTypeElement);
+                            allFields.addAll(inheritedFields);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // If superclass resolution fails (e.g., in test environments), continue with current class fields only
+            debugLog("Could not resolve superclass for " + typeElement.getQualifiedName() + ": " + e.getMessage());
+        }
+
+        return allFields;
+    }
+
+    /**
      * Adds imports needed for a specific field.
      */
     private void addFieldImports(Set<String> imports, VariableElement field) {
@@ -428,12 +467,49 @@ public class FilterMetaModelGenerator {
         // Handle nested model types (other @MetaModel classes)
         if (fieldType instanceof DeclaredType declaredType) {
             Element element = declaredType.asElement();
-            if (element instanceof TypeElement typeElement && typeElement.getAnnotation(MetaModel.class) != null) {
-                String nestedFilterClass = typeElement.getSimpleName() + FILTER4;
-                imports.add(typeElement.getQualifiedName().toString().replace(
-                        typeElement.getSimpleName().toString(), nestedFilterClass));
-            }
+            if (element instanceof TypeElement typeElement) {
+                if (typeElement.getAnnotation(MetaModel.class) != null) {
+                    // Import the filter class for the nested model
+                    String nestedFilterClass = typeElement.getSimpleName() + FILTER4;
+                    imports.add(typeElement.getQualifiedName().toString().replace(
+                            typeElement.getSimpleName().toString(), nestedFilterClass));
+                    // Also import the entity class itself
+                    String qualifiedName = typeElement.getQualifiedName().toString();
+                    if (!qualifiedName.startsWith("java.lang")) {
+                        imports.add(qualifiedName);
+                    }
+                } else if (typeElement.getKind() == ElementKind.ENUM) {
+                    // Import enum types from different packages
+                    String qualifiedName = typeElement.getQualifiedName().toString();
+                    if (!qualifiedName.startsWith("java.lang") && !qualifiedName.startsWith("java.util")) {
+                        imports.add(qualifiedName);
+                    }
+                }
 
+                // Handle collection element types from different packages
+                if (isCollectionType(fieldType)) {
+                    List<? extends TypeMirror> typeArguments = declaredType.getTypeArguments();
+                    if (!typeArguments.isEmpty()) {
+                        TypeMirror elementTypeMirror = typeArguments.get(0);
+                        if (elementTypeMirror instanceof DeclaredType elementDeclaredType) {
+                            Element elementElement = elementDeclaredType.asElement();
+                            if (elementElement instanceof TypeElement elementTypeElement) {
+                                String elementQualifiedName = elementTypeElement.getQualifiedName().toString();
+                                if (!elementQualifiedName.startsWith("java.lang") &&
+                                        !elementQualifiedName.startsWith("java.util")) {
+                                    imports.add(elementQualifiedName);
+                                    // If the element type is a @MetaModel, also import its filter class
+                                    if (elementTypeElement.getAnnotation(MetaModel.class) != null) {
+                                        String elementFilterClass = elementTypeElement.getSimpleName() + FILTER4;
+                                        imports.add(elementQualifiedName.replace(
+                                                elementTypeElement.getSimpleName().toString(), elementFilterClass));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
