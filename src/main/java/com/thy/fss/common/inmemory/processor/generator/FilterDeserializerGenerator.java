@@ -478,7 +478,9 @@ public class FilterDeserializerGenerator {
                     String elementFilterQualifiedName = config.getElementFilterQualifiedName();
                     if (elementFilterQualifiedName != null && !elementFilterQualifiedName.isEmpty()) {
                         imports.add(elementFilterQualifiedName);
+                        imports.add(elementFilterQualifiedName + DESERIALIZER_SUFFIX);
                         debugLog("Added model element filter import: " + elementFilterQualifiedName);
+                        debugLog("Added model element filter deserializer import: " + elementFilterQualifiedName + DESERIALIZER_SUFFIX);
                     }
                     
                     // Add import for the element type itself if needed
