@@ -319,6 +319,28 @@ public class StaticMetaModelGenerator {
         if (isCollectionType(fieldType)) {
             imports.add(JAVA_UTIL_COLLECTION);
             debugLog("Added Collection import for field: " + fieldName);
+
+            // Also import collection element type if it's from a different package
+            if (fieldType instanceof DeclaredType collectionDeclaredType) {
+                List<? extends TypeMirror> typeArguments = collectionDeclaredType.getTypeArguments();
+                if (!typeArguments.isEmpty()) {
+                    TypeMirror elementType = typeArguments.get(0);
+                    if (elementType instanceof DeclaredType elementDeclaredType) {
+                        Element elementElement = elementDeclaredType.asElement();
+                        if (elementElement instanceof TypeElement elementTypeElement) {
+                            String elementQualifiedName = elementTypeElement.getQualifiedName().toString();
+                            if (!PRIMITIVE_TYPE_MAPPING.containsKey(elementQualifiedName) &&
+                                    !TEMPORAL_TYPE_MAPPING.containsKey(elementQualifiedName) &&
+                                    !elementQualifiedName.startsWith("java.lang") &&
+                                    !elementQualifiedName.startsWith("java.util") &&
+                                    !elementQualifiedName.equals("java.lang.Object")) {
+                                imports.add(elementQualifiedName);
+                                debugLog("Added collection element type import: " + elementQualifiedName + " for field: " + fieldName);
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Handle complex types (ModelAttribute)
