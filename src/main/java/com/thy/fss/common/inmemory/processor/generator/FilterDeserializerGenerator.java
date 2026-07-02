@@ -547,6 +547,24 @@ public class FilterDeserializerGenerator {
                     imports.add(packageName + "." + config.getFilterType()+DESERIALIZER_SUFFIX);
                 }
             }
+
+            // Ensure the field type used in deserializeValue calls is always imported.
+            // This covers enum types from other packages, custom types, and any type
+            // that the generated code references via its simple name.
+            String fieldType = config.getFieldType();
+            if (fieldType != null && !fieldType.isEmpty() && fieldType.contains(".")
+                    && !fieldType.startsWith("java.lang.")) {
+                // For collection types, the element type is what gets used in deserializeValue
+                if (config.isCollection()) {
+                    String elementType = config.getElementType();
+                    if (elementType != null && !elementType.isEmpty() && elementType.contains(".")
+                            && !elementType.startsWith("java.lang.")) {
+                        imports.add(elementType);
+                    }
+                } else if (!config.isModel()) {
+                    imports.add(fieldType);
+                }
+            }
         }
 
         return imports;
