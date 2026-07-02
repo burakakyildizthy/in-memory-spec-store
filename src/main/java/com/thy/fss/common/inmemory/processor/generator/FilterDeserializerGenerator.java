@@ -565,6 +565,49 @@ public class FilterDeserializerGenerator {
                     imports.add(fieldType);
                 }
             }
+
+            // Unified import section: mirrors generateHandleNestedFilterPathMethod logic exactly.
+            // Ensures that all classes referenced in handleNestedFilterPath are imported.
+            if (config.isCollection() && config.getElementType() != null
+                    && !isBasicElementType(config.getElementType())) {
+                // Model type collection field - import entity, filter, and deserializer classes
+                String elementType = config.getElementType();
+                String elementFilterType = getFilterTypeForElementType(elementType);
+                // Derive the element package from the fully qualified element type
+                String elementPackage;
+                int lastDot = elementType.lastIndexOf('.');
+                if (lastDot > 0) {
+                    elementPackage = elementType.substring(0, lastDot);
+                } else {
+                    elementPackage = config.getPackageName();
+                }
+                if (elementPackage != null && !elementPackage.isEmpty()) {
+                    // Entity class import (fully qualified element type)
+                    imports.add(elementType);
+                    // Filter class import
+                    imports.add(elementPackage + "." + elementFilterType);
+                    // Deserializer class import
+                    imports.add(elementPackage + "." + elementFilterType + DESERIALIZER_SUFFIX);
+                }
+            } else if (config.isModel()) {
+                // Model field - ensure filter and deserializer imports even when packageName is null
+                String packageName = config.getPackageName();
+                if (packageName == null || packageName.isEmpty()) {
+                    // Derive package from fieldType
+                    String modelFieldType = config.getFieldType();
+                    if (modelFieldType != null && modelFieldType.contains(".")) {
+                        int lastDot = modelFieldType.lastIndexOf('.');
+                        packageName = modelFieldType.substring(0, lastDot);
+                    }
+                }
+                if (packageName != null && !packageName.isEmpty()) {
+                    String filterType = config.getFilterType();
+                    if (filterType != null && !filterType.isEmpty()) {
+                        imports.add(packageName + "." + filterType);
+                        imports.add(packageName + "." + filterType + DESERIALIZER_SUFFIX);
+                    }
+                }
+            }
         }
 
         return imports;
