@@ -638,9 +638,9 @@ class BaseSpecificationServiceDeepCoverageTest {
         }
 
         @Test
-        @DisplayName("Returns false for null filter")
+        @DisplayName("Returns true for null filter (no criteria to apply)")
         void nullFilter() {
-            assertThat(service.validateCollectionElement("element", null, String.class)).isFalse();
+            assertThat(service.validateCollectionElement("element", null, String.class)).isTrue();
         }
 
         @Test

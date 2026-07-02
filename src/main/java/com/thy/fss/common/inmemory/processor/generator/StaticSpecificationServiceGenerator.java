@@ -801,10 +801,23 @@ public class StaticSpecificationServiceGenerator {
      * Generates the body of a validation method.
      */
     private void generateValidationMethodBody(PrintWriter out, FieldInfo field, Operator operator) {
-        // Add null check for entity parameter
-        out.println(ENTITY_NULL_CHECK);
-        out.println(RETURN_FALSE);
-        out.println(CLOSING_BRACE);
+        // Add null check for entity parameter with correct semantics
+        // When entity is null, all fields are effectively null
+        if (operator == Operator.IS_NULL) {
+            // When entity is null, the field is null, so isNull check should pass if value is true
+            out.println(ENTITY_NULL_CHECK);
+            out.println("            return (value == null || value.booleanValue());");
+            out.println(CLOSING_BRACE);
+        } else if (operator == Operator.IS_NOT_NULL) {
+            // When entity is null, the field is null, so isNotNull check should fail if value is true
+            out.println(ENTITY_NULL_CHECK);
+            out.println("            return !(value == null || value.booleanValue());");
+            out.println(CLOSING_BRACE);
+        } else {
+            out.println(ENTITY_NULL_CHECK);
+            out.println(RETURN_FALSE);
+            out.println(CLOSING_BRACE);
+        }
 
         String fieldAccess = "entity." + field.getterMethodName + "()";
 
@@ -1293,14 +1306,11 @@ public class StaticSpecificationServiceGenerator {
         out.println("    @SuppressWarnings(\"unchecked\")");
         out.println("    protected <E> boolean validateCollectionElement(E element, Object elementFilter, ");
         out.println("            com.thy.fss.common.inmemory.specification.SpecificationService<E> elementService) {");
-        out.println("        if (element == null) {");
-        out.println("            return false;");
-        out.println(CLOSING_BRACE);
         out.println("        if (elementFilter == null) {");
         out.println("            return true;");
         out.println(CLOSING_BRACE);
         out.println();
-        out.println("        // Delegate to element type service for validation");
+        out.println("        // Delegate to element type service for validation (handles null element correctly)");
         out.println("        return elementService.validateFilter(element, elementFilter);");
         out.println("    }");
         out.println();
@@ -1412,11 +1422,11 @@ public class StaticSpecificationServiceGenerator {
 
         out.println(OVERRIDE_ANNOTATION);
         out.println("    public boolean validateFilter(" + simpleClassName + " entity, Object filter) {");
-        out.println(ENTITY_NULL_CHECK);
-        out.println(RETURN_FALSE);
-        out.println(CLOSING_BRACE);
         out.println("        if (!(filter instanceof " + filterClassName + " " + simpleClassName.toLowerCase() + "Filter)) {");
         out.println("            throw new IllegalArgumentException(\"Filter must be of type " + filterClassName + "\");");
+        out.println(CLOSING_BRACE);
+        out.println("        if (entity == null) {");
+        out.println("            return validateFilterForNullEntity(" + simpleClassName.toLowerCase() + "Filter);");
         out.println(CLOSING_BRACE);
         out.println();
 
@@ -1429,6 +1439,142 @@ public class StaticSpecificationServiceGenerator {
         out.println("        return true; // All filters passed");
         out.println("    }");
         out.println();
+
+        // Generate the validateFilterForNullEntity helper method
+        generateValidateFilterForNullEntityMethod(out, fields, simpleClassName);
+    }
+
+    /**
+     * Generates the validateFilterForNullEntity helper method.
+     * When entity is null, all fields are effectively null.
+     * Only isNull=true filters pass; isNotNull=true and value-based filters fail.
+     * Nested model filters are delegated to their service with null entity.
+     */
+    private void generateValidateFilterForNullEntityMethod(PrintWriter out, List<FieldInfo> fields, String simpleClassName) {
+        String filterClassName = simpleClassName + "Filter";
+        String filterVariableName = simpleClassName.toLowerCase() + "Filter";
+
+        out.println("    /**");
+        out.println("     * Validates filter criteria when entity is null.");
+        out.println("     * When entity is null, all fields are effectively null.");
+        out.println("     */");
+        out.println("    private boolean validateFilterForNullEntity(" + filterClassName + " " + filterVariableName + ") {");
+
+        for (FieldInfo field : fields) {
+            generateNullEntityFieldFilterValidation(out, field, filterVariableName);
+        }
+
+        out.println("        return true;");
+        out.println("    }");
+        out.println();
+    }
+
+    /**
+     * Generates filter validation for a specific field when the entity is null.
+     */
+    private void generateNullEntityFieldFilterValidation(PrintWriter out, FieldInfo field, String filterVariableName) {
+        String filterGetterName = "get" + capitalize(field.fieldName);
+        String filterFieldAccess = filterVariableName + "." + filterGetterName + "()";
+
+        if (isModelType(field.fieldType)) {
+            // For model type fields: delegate to nested service with null entity
+            String nestedFieldTypeName = getFieldTypeName(field.fieldType);
+            String simpleModelName = nestedFieldTypeName.substring(nestedFieldTypeName.lastIndexOf('.') + 1);
+            String nestedServiceStaticRef = simpleModelName + "SpecificationService.INSTANCE";
+
+            out.println("        if (" + filterFieldAccess + " != null) {");
+            out.println("            if (!" + nestedServiceStaticRef + ".validateFilter(null, " + filterFieldAccess + ")) return false;");
+            out.println(CLOSING_BRACE);
+            out.println();
+            return;
+        }
+
+        out.println("        if (" + filterFieldAccess + " != null) {");
+
+        if (field.isCollection) {
+            // For collection fields when entity is null: collection is null
+            // isNull=true passes, isNotNull=true fails, isEmpty/isNotEmpty/collectionOps fail
+            generateNullEntityCollectionFilterValidation(out, field, filterFieldAccess);
+        } else {
+            // For simple fields when entity is null: field is null
+            // Only isNull/isNotNull need evaluation; all other filters fail
+            generateNullEntitySimpleFieldFilterValidation(out, field, filterFieldAccess);
+        }
+
+        out.println(CLOSING_BRACE);
+        out.println();
+    }
+
+    /**
+     * Generates validation for simple field filters when entity is null (field is effectively null).
+     */
+    private void generateNullEntitySimpleFieldFilterValidation(PrintWriter out, FieldInfo field, String filterAccess) {
+        Set<Operator> supportedOperators = FIELD_TYPE_OPERATORS.get(field.validationPrefix);
+        if (supportedOperators == null) {
+            supportedOperators = Set.of(Operator.EQUALS, Operator.IS_NULL, Operator.IS_NOT_NULL);
+        }
+
+        for (Operator operator : supportedOperators) {
+            String validationMethodSuffix = getOperatorMethodSuffix(operator);
+            String filterGetterMethod = "get" + validationMethodSuffix;
+
+            if (operator == Operator.IS_NULL) {
+                // isNull: when field is null, isNull=true should pass, isNull=false should fail
+                out.println("            if (" + filterAccess + "." + filterGetterMethod + "() != null) {");
+                out.println("                Boolean isNullValue = " + filterAccess + "." + filterGetterMethod + "();");
+                out.println("                if (!(isNullValue == null || isNullValue.booleanValue())) return false;");
+                out.println("            }");
+            } else if (operator == Operator.IS_NOT_NULL) {
+                // isNotNull: when field is null, isNotNull=true should fail, isNotNull=false should pass
+                out.println("            if (" + filterAccess + "." + filterGetterMethod + "() != null) {");
+                out.println("                Boolean isNotNullValue = " + filterAccess + "." + filterGetterMethod + "();");
+                out.println("                if (isNotNullValue == null || isNotNullValue.booleanValue()) return false;");
+                out.println("            }");
+            } else {
+                // All other operators: value-based operations fail when field is null
+                out.println("            if (" + filterAccess + "." + filterGetterMethod + "() != null) return false;");
+            }
+        }
+    }
+
+    /**
+     * Generates validation for collection field filters when entity is null (collection is effectively null).
+     */
+    private void generateNullEntityCollectionFilterValidation(PrintWriter out, FieldInfo field, String filterAccess) {
+        // When entity is null, the collection field is null
+        // isNull=true passes, isNotNull=true fails
+        // isEmpty, isNotEmpty, collectionAny, collectionAll, collectionNone: fail (no collection exists)
+        out.println("            // Collection is null when entity is null");
+        out.println("            if (" + filterAccess + ".getIsNull() != null) {");
+        out.println("                Boolean isNullValue = " + filterAccess + ".getIsNull();");
+        out.println("                if (!(isNullValue == null || isNullValue.booleanValue())) return false;");
+        out.println("            }");
+        out.println("            if (" + filterAccess + ".getIsNotNull() != null) {");
+        out.println("                Boolean isNotNullValue = " + filterAccess + ".getIsNotNull();");
+        out.println("                if (isNotNullValue == null || isNotNullValue.booleanValue()) return false;");
+        out.println("            }");
+        out.println("            if (" + filterAccess + ".getIsEmpty() != null) {");
+        out.println("                Boolean isEmptyValue = " + filterAccess + ".getIsEmpty();");
+        out.println("                // null collection: isEmpty=true should fail (null != empty), isEmpty=false should pass");
+        out.println("                if (isEmptyValue == null || isEmptyValue.booleanValue()) return false;");
+        out.println("            }");
+        out.println("            if (" + filterAccess + ".getIsNotEmpty() != null) {");
+        out.println("                Boolean isNotEmptyValue = " + filterAccess + ".getIsNotEmpty();");
+        out.println("                // null collection: isNotEmpty=true should fail, isNotEmpty=false should pass");
+        out.println("                if (isNotEmptyValue == null || isNotEmptyValue.booleanValue()) return false;");
+        out.println("            }");
+
+        // Collection operations (any/all/none) with null collection
+        boolean isModelElementType = field.collectionElementType != null && isModelElementType(field.collectionElementType);
+        if (isModelElementType) {
+            out.println("            if (" + filterAccess + ".getCollectionAny() != null) return false;");
+            out.println("            if (" + filterAccess + ".getCollectionAll() != null) return false;");
+            out.println("            // collectionNone with null collection: no elements violate -> true (do not fail)");
+        } else {
+            out.println("            if (" + filterAccess + ".getCollectionAny() != null) return false;");
+            out.println("            if (" + filterAccess + ".getCollectionAll() != null) return false;");
+            // collectionNone is correct: null collection has no elements, so none match
+        }
     }
 
     /**
