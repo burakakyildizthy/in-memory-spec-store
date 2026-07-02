@@ -629,7 +629,20 @@ public class StaticSpecificationServiceGenerator {
         out.println("import java.time.*;");
 
         if (dependentModelTypes != null) {
-            dependentModelTypes.forEach(modelType -> out.println("import " + modelType + "SpecificationService;"));
+            for (String modelType : dependentModelTypes) {
+                String modelPackage = getPackageName(modelType);
+                // Only add cross-package imports when the dependent model is in a different package
+                if (!modelPackage.isEmpty() && !modelPackage.equals(packageName)) {
+                    // Import the entity class itself (used in collection type declarations and casts)
+                    out.println("import " + modelType + ";");
+                    // Import the Filter class (used in model type collection validation)
+                    out.println("import " + modelType + "Filter;");
+                    // Import the static metamodel class (used in navigateNested for attr comparison)
+                    out.println("import " + modelType + "_;");
+                }
+                // Import the SpecificationService class (always needed for .INSTANCE references)
+                out.println("import " + modelType + "SpecificationService;");
+            }
         }
 
         out.println();
@@ -2710,6 +2723,14 @@ public class StaticSpecificationServiceGenerator {
                 if (!dependentTypes.contains(modelTypeName)) {
                     dependentTypes.add(modelTypeName);
                     debugLog("[DEBUG] StaticSpecificationServiceGenerator: Found dependent model type: " + modelTypeName);
+                }
+            }
+            // Also include collection element types that are model types
+            if (field.isCollection && field.collectionElementType != null && isModelElementType(field.collectionElementType)) {
+                String elementTypeName = field.collectionElementType;
+                if (!dependentTypes.contains(elementTypeName)) {
+                    dependentTypes.add(elementTypeName);
+                    debugLog("[DEBUG] StaticSpecificationServiceGenerator: Found dependent collection element model type: " + elementTypeName);
                 }
             }
         }
