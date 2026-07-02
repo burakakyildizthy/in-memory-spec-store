@@ -565,6 +565,62 @@ public class FilterDeserializerGenerator {
                     imports.add(fieldType);
                 }
             }
+
+            // --- UNIFIED IMPORT LOGIC ---
+            // This section ensures that imports are generated using the SAME logic as
+            // generateHandleNestedFilterPathMethod, which uses isBasicElementType() to decide
+            // what code to generate. This guarantees imports always match generated code,
+            // regardless of whether config.isModelElementType() or config.isModel() flags
+            // were correctly set during field processing.
+
+            // For collection fields: mirror the logic in generateHandleNestedFilterPathMethod
+            // which checks !isBasicElementType(elementType) to decide if model-type code is generated
+            if (config.isCollection() && config.getElementType() != null && !config.getElementType().isEmpty()) {
+                String elementType = config.getElementType();
+                if (!isBasicElementType(elementType)) {
+                    // This matches what generateHandleNestedFilterPathMethod generates:
+                    // - FilterBase<SimpleClassName> (FilterBase is fully qualified, but SimpleClassName is not)
+                    // - elementFilterType (simple name like UserFilter)
+                    // - elementFilterType + "Deserializer" (simple name like UserFilterDeserializer)
+                    String elementFilterType = getFilterTypeForElementType(elementType); // e.g., "UserFilter"
+                    String elementPackage = elementType.contains(".")
+                            ? elementType.substring(0, elementType.lastIndexOf('.'))
+                            : "";
+
+                    // Import element entity class (used as generic type parameter in FilterBase<User>)
+                    if (elementType.contains(".") && !elementType.startsWith("java.lang.")) {
+                        imports.add(elementType);
+                    }
+
+                    // Import element filter class and its deserializer
+                    if (!elementPackage.isEmpty()) {
+                        imports.add(elementPackage + "." + elementFilterType);
+                        imports.add(elementPackage + "." + elementFilterType + DESERIALIZER_SUFFIX);
+                        debugLog("Unified import: added " + elementPackage + "." + elementFilterType
+                                + " and deserializer for collection element type: " + elementType);
+                    }
+                }
+            }
+
+            // For model fields: mirror the logic in generateHandleNestedFilterPathMethod
+            // which uses config.getFilterType() and config.getFilterType() + "Deserializer"
+            if (config.isModel()) {
+                String filterType = config.getFilterType();
+                String packageName = config.getPackageName();
+
+                // If packageName is null/empty, try to derive it from fieldType
+                if ((packageName == null || packageName.isEmpty()) && config.getFieldType() != null
+                        && config.getFieldType().contains(".")) {
+                    packageName = config.getFieldType().substring(0, config.getFieldType().lastIndexOf('.'));
+                }
+
+                if (packageName != null && !packageName.isEmpty() && filterType != null && !filterType.isEmpty()) {
+                    imports.add(packageName + "." + filterType);
+                    imports.add(packageName + "." + filterType + DESERIALIZER_SUFFIX);
+                    debugLog("Unified import: added " + packageName + "." + filterType
+                            + " and deserializer for model field");
+                }
+            }
         }
 
         return imports;
