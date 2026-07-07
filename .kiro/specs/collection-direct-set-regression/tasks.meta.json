@@ -1,0 +1,166 @@
+{
+  "pbtResults": {
+    "1. Bug koşulu keşif (exploration) özellik testini yaz": {
+      "status": "passed",
+      "failingExample": "**Senaryo (a) — iç içe sarmalama (1.1):**\n- Girdi: `List.of(7, 8)` (Integer) → null `tags` (List<String>)\n- Beklenen: `[7, 8]` (düz)\n- Gerçek: `[[7, 8]]` (tek elemanlı iç içe — tüm liste sarmalanmış)\n- Karşı örnek (jqwik): `[[1, 1]]` — `Expected size: 2 but was: 1`\n\n**Senaryo (b) — sınırsız büyüme (1.2):**\n- Girdi: `List.of(7, 8)` (Integer) → 3x tekrarlı uygulama\n- Beklenen: Her uygulamada `size == 2` (idempotent)\n- Gerçek: `[[7,8]] → [[7,8],[7,8]] → [[7,8],[7,8],[7,8]]` — her uygulamada büyüyor\n- Karşı örnek: `First size: 1, Second size: 2. Tags: [[7, 8], [7, 8]]`\n- jqwik karşı örnek: `tags == [[1, 1], [1, 1], [1, 1]]` — expected size 2, was 1\n\n**Senaryo (c) — null kalma / ClassCastException (1.3, 2.3):**\n- Girdi: `List.of(1, 2, 3)` (Integer) → null `numbers` (Set<Integer>)\n- Beklenen: `numbers` populated as Set with {1, 2, 3}\n- Gerçek: `numbers == null` — ClassCastException from `new ArrayList<>()` cast to `java.util.Set`\n- Karşı örnek: `Expecting actual not to be null`\n\n**Kök neden doğrulandı:**\n1. `allElementsAssignable` false döndüğünde (Integer → String varyansı) → `else` branch → `collection.add(source)` → nesting\n2. Null init koşulsuz `new ArrayList<>()` → Set alanı setter'ı cast eder → ClassCastException",
+      "lastRunTimestamp": 1783376893717
+    },
+    "2. Koruma (preservation) özellik testlerini yaz (düzeltmeden ÖNCE)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783377409958
+    },
+    "3.4 Bug koşulu keşif testinin artık GEÇTİĞİNİ doğrula + fix-checking özellik testlerini tamamla": {
+      "status": "passed",
+      "lastRunTimestamp": 1783392547430
+    },
+    "3.5 Koruma testlerinin hâlâ GEÇTİĞİNİ doğrula (regresyon yok)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783392619329
+    }
+  },
+  "executionHistory": {
+    "1. Bug koşulu keşif (exploration) özellik testini yaz": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376507921
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376517414
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376915407
+      }
+    ],
+    "2. Koruma (preservation) özellik testlerini yaz (düzeltmeden ÖNCE)": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376507969
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376922897
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783377429450
+      }
+    ],
+    "3.1 Somut koleksiyon tipini metadataya taşı (`CollectionAttribute`)": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508011
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783377437155
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783377534728
+      }
+    ],
+    "3.2 Üreticinin bildirilen koleksiyon tipini yaymasını sağla (`StaticMetaModelGenerator`)": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508084
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783377541935
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783391505353
+      }
+    ],
+    "3.3 Merkezi ayrıştırıcıyı düzelt (`BaseSpecificationService.assignToCollectionField`)": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508128
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783391512688
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392056774
+      }
+    ],
+    "3.4 Bug koşulu keşif testinin artık GEÇTİĞİNİ doğrula + fix-checking özellik testlerini tamamla": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508168
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392065069
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392570375
+      }
+    ],
+    "3.5 Koruma testlerinin hâlâ GEÇTİĞİNİ doğrula (regresyon yok)": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508208
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392575320
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392634190
+      }
+    ],
+    "4. Checkpoint - Tüm testlerin ve derlemenin geçtiğinden emin ol": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783376508247
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392639095
+      },
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783393482444
+      }
+    ],
+    "3. Koleksiyonların doğrudan set edilmesi regresyonu için düzeltme": [
+      {
+        "executionId": "1757ac42-6481-4cc1-ae7b-5e855a36d409",
+        "chatSessionId": "sess_b210804c-b6b9-41ab-a69f-4d0d73d2209d",
+        "timestamp": 1783392634231
+      }
+    ]
+  }
+}

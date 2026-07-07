@@ -1,0 +1,243 @@
+{
+  "pbtResults": {
+    "1. Fault-condition (exploration) property testini yaz — düzeltme ÖNCESİ": {
+      "status": "passed",
+      "failingExample": "All 7 tests FAILED as expected, confirming the bug exists:\n\n**Senaryo A (Order.items nesting):**\n- Expected size: 2 but was: 1 in: [[OrderItem@51c8e494, OrderItem@4f1af4af]]\n- Bug: items == [[i1, i2]] instead of [i1, i2]\n\n**Senaryo B (CollectionEntity.tags nesting):**\n- Expecting actual: [\"A\"] to be instance of String but was instance of ArrayList\n- Bug: tags == [[\"A\"]] instead of [\"A\"]\n\n**Senaryo C (Multi-level path nesting):**\n- Expected size: 2 but was: 1 in: [[\"A\", \"A\"]]\n- Bug: multi-level path wraps collection in [[...]]\n\n**Senaryo D (Idempotency - unbounded growth):**\n- Collection size should remain constant. First: 1, Second: 2. Tags after second: [[A], [A]]\n- Bug: each re-application appends another wrapped collection\n\n**Senaryo E (ALL selector path nesting):**\n- Expecting actual: [\"A\"] to be instance of String but was instance of ArrayList\n- Bug: addValueToCollection wraps in [[...]] via add(value)\n\n**Concrete Example - tags assignment:**\n- tags should be [a, b], not [[a, b]]. Expected size: 2 but was: 1 in: [[\"a\", \"b\"]]\n\n**Concrete Example - repeated assignment growth:**\n- After second application, size should equal source size (2), not grow. Actual: [[a, b], [a, b]]\n- Expected: 1 but was: 2",
+      "lastRunTimestamp": 1783349360234
+    },
+    "2. Preservation (koruma) property testlerini yaz — düzeltme ÖNCESİ": {
+      "status": "not_run",
+      "lastRunTimestamp": 1783352096268
+    }
+  },
+  "executionHistory": {
+    "1. Fault-condition (exploration) property testini yaz — düzeltme ÖNCESİ": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348002576
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348012735
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783349389296
+      }
+    ],
+    "2. Preservation (koruma) property testlerini yaz — düzeltme ÖNCESİ": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348002823
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783349393430
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352168303
+      }
+    ],
+    "3.1 Yardımcı metotları ekle": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348002887
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352173958
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352261520
+      }
+    ],
+    "3.2 Ortak ayırt edici (discriminator) yardımcı `assignToCollectionField(...)` ekle": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348002927
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352266032
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352345603
+      }
+    ],
+    "3.3 `handleCollectionField(...)` metodunu `assignToCollectionField(...)`'a yönlendir": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348002965
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352349548
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352432843
+      }
+    ],
+    "3.4 `addValueToCollection(...)` metodunu `assignToCollectionField(...)`'a yönlendir": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003006
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352436629
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352510388
+      }
+    ],
+    "3.5 Fault-condition (exploration) testinin artık GEÇTİĞİNİ doğrula": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003047
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352515224
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352519711
+      }
+    ],
+    "3.6 Preservation testlerinin HÂLÂ GEÇTİĞİNİ doğrula": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003089
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352523765
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352527743
+      }
+    ],
+    "4. Fix-checking property testini yaz (düzeltme SONRASI)": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003140
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352537971
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352830094
+      }
+    ],
+    "5. Somut birim testlerini yaz (Example)": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003180
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352838484
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352997077
+      }
+    ],
+    "6. Entegrasyon testlerini yaz": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003217
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353001563
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353554998
+      }
+    ],
+    "7. [GEÇİTLİ] `MappingApplicator.applyCollectionMapping` kısmi workaround'unu kaldır / genelleştir": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003257
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353559859
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353661416
+      }
+    ],
+    "8. Checkpoint — tüm testlerin geçtiğinden emin ol": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783348003298
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353665486
+      },
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783353671398
+      }
+    ],
+    "3. Koleksiyon-atama mantığını `BaseSpecificationService` içinde merkezî olarak düzelt": [
+      {
+        "executionId": "0df3fd0d-edcb-4ac2-bba6-912b21817436",
+        "chatSessionId": "sess_e8a7dce7-685c-4ba8-a375-a8d7383b977a",
+        "timestamp": 1783352527783
+      }
+    ]
+  }
+}

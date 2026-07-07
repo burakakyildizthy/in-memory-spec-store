@@ -1,0 +1,166 @@
+{
+  "pbtResults": {
+    "1. Write bug condition exploration test (BEFORE implementing fix)": {
+      "status": "passed",
+      "failingExample": "All 7 property tests FAILED as expected, confirming the bug exists:\n\n1. Bug Case 1 Static (Map<String, Order>): Generated BugTriggeringEntity_ does NOT contain \"import com.other.pkg.Order;\" - Map's java.util.Map type is excluded by startsWith(\"java.util\") guard before its type arguments are inspected. [Req 1.1, 1.4]\n\n2. Bug Case 1 Filter (Map<String, Order>): Generated BugTriggeringEntityFilter does NOT contain \"import com.other.pkg.Order;\" or \"import com.other.pkg.OrderFilter;\" - same root cause. [Req 1.1, 1.4, 1.5]\n\n3. Bug Case 2 Static (List<Map<String, Order>>): Generated BugTriggeringEntity_ does NOT contain \"import com.other.pkg.Order;\" - only the outer first argument is inspected; inner Order is never reached due to no recursion. [Req 1.2]\n\n4. Bug Case 3 Static (List<List<Order>>): Generated BugTriggeringEntity_ does NOT contain \"import com.other.pkg.Order;\" - outer first argument List<Order> is java.util type (excluded), nested Order never reached. [Req 1.2, 1.4]\n\n5. Bug Case 4 Static (Map<CustomerId, Order>): Generated BugTriggeringEntity_ is MISSING BOTH \"import com.other.pkg.CustomerId;\" AND \"import com.other.pkg.Order;\" - Map excluded by java.util guard, and even if it weren't, only typeArguments.get(0) would be considered. [Req 1.3]\n\n6. Bug Case 4 Filter (Map<CustomerId, Order>): Generated BugTriggeringEntityFilter is MISSING all 4 expected imports (CustomerId, CustomerIdFilter, Order, OrderFilter). [Req 1.3, 1.5]\n\n7. Universal Property: All expected imports missing from generated sources across all field shapes, confirming the bug is systemic.\n\nGenerated code shows ModelAttribute<BugTriggeringEntity, Map<key,value>> with no import for the referenced types, confirming the generated class would fail to compile with \"cannot find symbol\" errors.",
+      "lastRunTimestamp": 1783029922507
+    },
+    "2. Write preservation property tests (BEFORE implementing fix)": {
+      "status": "passed",
+      "lastRunTimestamp": 1783060212939
+    },
+    "3.3 Verify bug condition exploration test now passes": {
+      "status": "passed",
+      "lastRunTimestamp": 1783060795541
+    },
+    "3.4 Verify preservation tests still pass": {
+      "status": "passed",
+      "lastRunTimestamp": 1783061102488
+    }
+  },
+  "executionHistory": {
+    "1. Write bug condition exploration test (BEFORE implementing fix)": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804108
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028855169
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783029959649
+      }
+    ],
+    "2. Write preservation property tests (BEFORE implementing fix)": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804328
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783029967991
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060243746
+      }
+    ],
+    "3.1 Implement the recursive import collector in `StaticMetaModelGenerator`": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804385
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060252837
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060377432
+      }
+    ],
+    "3.2 Implement the recursive import collector in `FilterMetaModelGenerator`": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804475
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060381732
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060491358
+      }
+    ],
+    "3.3 Verify bug condition exploration test now passes": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804510
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060500285
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060819416
+      }
+    ],
+    "3.4 Verify preservation tests still pass": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804553
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783060823295
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783061116333
+      }
+    ],
+    "4. Add supporting unit, property-based, and integration tests": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804586
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783061121277
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783061831094
+      }
+    ],
+    "5. Checkpoint - Ensure all tests pass": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783028804641
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783061835139
+      },
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783062400272
+      }
+    ],
+    "3. Fix for missing imports of nested/map/multi-argument generic type parameters in generated classes": [
+      {
+        "executionId": "5bb1ff0b-20d5-4c43-b09b-e3bff2f1c5aa",
+        "chatSessionId": "sess_b28b0975-ba01-45d3-b442-1de87aa0c28a",
+        "timestamp": 1783061116377
+      }
+    ]
+  }
+}
